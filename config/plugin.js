@@ -4,8 +4,12 @@ module.exports = {
   // static: {
   //   enable: true,
   // }
-  mongoose:{
+  // mongoose:{
+  //   enable: true,
+  //   package: 'egg-mongoose',
+  // }
+  mysql:{
     enable: true,
-    package: 'egg-mongoose',
+    package: 'egg-mysql',
   }
 };
