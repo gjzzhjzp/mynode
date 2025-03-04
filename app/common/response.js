@@ -15,7 +15,8 @@ module.exports = {
       return {
         code,
         message,
-        details: this.ctx.app.config.env === 'prod' ? null : details, // 生产环境隐藏细节
+        details
+        // : this.ctx.app.config.env === 'prod' ? null : details, // 生产环境隐藏细节
       };
     }
   };

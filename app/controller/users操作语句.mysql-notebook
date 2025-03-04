@@ -1,0 +1,73 @@
+{
+    "type": "MySQLNotebook",
+    "version": "1.0",
+    "caption": "notebook.users - Data",
+    "content": "SELECT * FROM `notebook`.`users`;\r\nSELECT * FROM users WHERE openid = 'o5DNf7Kcd5UqkNq_5pj7lb1Hc7Mw';",
+    "options": {
+        "tabSize": 4,
+        "indentSize": 4,
+        "insertSpaces": true,
+        "defaultEOL": "LF",
+        "trimAutoWhitespace": true
+    },
+    "viewState": null,
+    "contexts": [
+        {
+            "state": {
+                "start": 1,
+                "end": 2,
+                "language": "mysql",
+                "result": {
+                    "type": "text",
+                    "text": [
+                        {
+                            "type": 0,
+                            "index": 0,
+                            "content": "MySQL Error (1064): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'SELECT * FROM users WHERE openid = 'o5DNf7Kcd5UqkNq_5pj7lb1Hc7Mw'' at line 2",
+                            "language": "ansi"
+                        },
+                        {
+                            "type": 0,
+                            "index": 1,
+                            "content": "MySQL Error (1065): Query was empty",
+                            "language": "ansi"
+                        },
+                        {
+                            "type": 0,
+                            "index": -1,
+                            "content": "✕ SQL Script execution completed in 57ms. 2 statements executed, 2 errors occurred.",
+                            "language": "ansi"
+                        }
+                    ],
+                    "executionInfo": {
+                        "text": ""
+                    }
+                },
+                "currentHeight": 352,
+                "currentSet": 1,
+                "maximizeResultPane": false,
+                "statements": [
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 0,
+                            "length": 33
+                        },
+                        "contentStart": 0,
+                        "state": 0
+                    },
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 33,
+                            "length": 67
+                        },
+                        "contentStart": 34,
+                        "state": 3
+                    }
+                ]
+            },
+            "data": []
+        }
+    ]
+}

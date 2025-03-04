@@ -18,6 +18,7 @@ module.exports = appInfo => {
     "errorHandler"
   ];
 
+
   // add your user config here
   const userConfig = {
     // myAppName: 'egg',
@@ -42,22 +43,42 @@ module.exports = appInfo => {
   // 关闭csrf防护
   config.security = {
     csrf: {
-      enable: false,
+      enable: true,
+      ignoreJSON: true, // 如果使用JSON API建议开启
+      cookieName: 'csrfToken', // 自定义cookie名称
+      headerName: 'x-csrf-token', // 自定义header名称
+      ignore: [
+        "/login",
+        "/api/v1"
+      ]
     },
-
   };
   config.cluster = {
     listen: {
       port: 7002,
     },
   }
-  config.thirdApi={
-    xcx:{
-      url:"https://api.weixin.qq.com/sns/jscode2session",
-      appid:"wx979fff2cbd6c3e80",
-      secret:"5b367c9cfe70d4a5eb3f1a1f2142b9e1",
+  config.jwt = {
+
+    secret: '5cb3e0edc9cb075e2be5a6c3305e2cfe1d379909ce494bec444445115f80fa92',
+    expiresIn: '2h'
+  };
+
+  config.thirdApi = {
+    xcx: {
+      url: "https://api.weixin.qq.com/sns/jscode2session",
+      appid: "wx979fff2cbd6c3e80",
+      secret: "5b367c9cfe70d4a5eb3f1a1f2142b9e1",
     }
   }
+  config.customLoader = {
+    common: {
+      directory: 'app/common', // 指定加载目录
+      inject: 'app',          // 注入到app对象
+      loadunit: true,         // 支持在单元测试时加载
+    }
+  };
+  config.env = "prod";
   return {
     ...config,
     ...userConfig,
