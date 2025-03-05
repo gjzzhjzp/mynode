@@ -5,12 +5,13 @@ const axios = require('axios');
 class UserController extends Controller {
   async create() {
     const { ctx } = this;
-    const { username } = ctx.request.body;
-   
-    ctx.body = ctx.app.common.response.success({
-      username
-    })
-  }
+    // 通过ctx.state.user获取用户信息
+    console.log("create", ctx.state.user);
+    const userId = ctx.state.user.id;
+    // const { username, password } = ctx.request.body;
+    // const user = await ctx.service.user.create({ userId, username, password });
+    ctx.body = ctx.app.common.response.success(ctx.state.user);
+}
   async get() {
     const { ctx } = this;
     console.log("get", ctx.query);
@@ -84,6 +85,7 @@ class UserController extends Controller {
         // 返回成功响应，包含token和用户信息
         ctx.body=ctx.app.common.response.success({
           token:token,
+          csrf_token:ctx.app.common.token.generateToken(ctx),
           userinfo:{
             id:user.id||res.insertId,
             username:data.openid,
