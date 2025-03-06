@@ -85,7 +85,6 @@ class UserController extends Controller {
         // 返回成功响应，包含token和用户信息
         ctx.body=ctx.app.common.response.success({
           token:token,
-          csrf_token:ctx.app.common.token.generateToken(ctx),
           userinfo:{
             id:user.id||res.insertId,
             username:data.openid,

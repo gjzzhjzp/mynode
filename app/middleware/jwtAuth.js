@@ -6,16 +6,16 @@ module.exports = options => {
             return;
         }
         // 验证CSRF token
-        const csrfToken = ctx.request.header['x-csrf-token'];
-        console.log("csrfToken",csrfToken,ctx.cookies.get('csrfToken'));
-        if (!csrfToken || csrfToken !== ctx.cookies.get('csrfToken')) {
-            ctx.status = 403;
-            ctx.body = {
-                code: 403,
-                message: 'CSRF token验证失败'
-            };
-            return;
-        }
+        // const csrfToken = ctx.request.header['x-csrf-token'];
+        // console.log("csrfToken",csrfToken,ctx.cookies.get('csrfToken'));
+        // if (!csrfToken || csrfToken !== ctx.cookies.get('csrfToken')) {
+        //     ctx.status = 403;
+        //     ctx.body = {
+        //         code: 403,
+        //         message: 'CSRF token验证失败'
+        //     };
+        //     return;
+        // }
         const token = ctx.request.header.authorization?.replace('Bearer ', '');
         if (token) {
             try {

@@ -41,10 +41,10 @@ module.exports = appInfo => {
     app: true,     // 挂载到 app 实例
     agent: false,  // 不挂载到 agent 实例
   };
-  // 关闭csrf防护
+  // 关闭csrf防护（小程序端无cookie，故关闭防护）
   config.security = {
     csrf: {
-      enable: true,
+      enable: false,
       ignoreJSON: true, // 如果使用JSON API建议开启
       cookieName: 'csrfToken', // 自定义cookie名称
       headerName: 'x-csrf-token', // 自定义header名称
