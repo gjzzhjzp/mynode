@@ -38,6 +38,12 @@ module.exports = appInfo => {
       password: 'DiwNjHlt', // 密码
       database: 'notebook', // 数据库名
     },
+    pool: {
+      // 连接池的配置
+      min: 0,
+      max: 1,
+      idleTimeoutMillis: 30000,
+    },
     app: true,     // 挂载到 app 实例
     agent: false,  // 不挂载到 agent 实例
   };

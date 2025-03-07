@@ -16,10 +16,10 @@ module.exports = () => {
 
       // 已知错误处理
       if (err.isBizError) { // 业务错误
-        ctx.body = ctx.response.error(err.code, err.message, err.details);
+        ctx.body = ctx.app.common.response.error(err.code, err.message, err.details);
         ctx.status = 200;
       } else if (err.status) { // HTTP 错误
-        ctx.body = ctx.response.error(err.status, err.message);
+        ctx.body = ctx.app.common.response.error(err.status, err.message);
         ctx.status = err.status;
       } else { // 未知系统错误
         ctx.body = ctx.response.error(500, 
