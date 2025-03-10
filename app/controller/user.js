@@ -51,9 +51,10 @@ class UserController extends Controller {
       try {
         // 发起HTTP请求，获取微信服务器返回的数据
         const data = await ctx.service.http.get(url);
-  
+        console.log("data.openid",data.openid);
         // 查询openid是否存在
         const user = await ctx.app.mysql.get('users', { openid: data.openid });
+        console.log("user",user);
         let res;
         // 如果用户存在则更新用户名，不存在则插入新用户
         if (user) {
@@ -71,11 +72,11 @@ class UserController extends Controller {
           });
         }
         // 打印操作结果和用户信息
-        console.log("res",res,user,user.id);
+        console.log("res",res);
         // 生成JWT token
         const token = this.app.jwt.sign(
           {
-            id: user.id||res.insertId,
+            id: user?user.id:res.insertId,
             username: data.openid,
             openid: data.openid
           },
@@ -86,7 +87,7 @@ class UserController extends Controller {
         ctx.body=ctx.app.common.response.success({
           token:token,
           userinfo:{
-            id:user.id||res.insertId,
+            id:user?user.id:res.insertId,
             username:data.openid,
             openid: data.openid,
           }

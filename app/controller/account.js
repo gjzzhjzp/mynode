@@ -7,26 +7,25 @@ class accountController extends Controller {
         const { ctx } = this;
         try {
             // 获取请求参数并校验
-            const { amount, type, category, description } = ctx.request.body;
-            if (!amount || !type || !category ) {
+            const { amount, type, category, description,date } = ctx.request.body;
+            if (!amount || typeof type==undefined || !category||!date ) {
                 ctx.body = ctx.app.common.response.error(400, '缺少必要参数');
                 return;
             }
 
             // 获取当前用户ID
-            const userId = ctx.state.user.username;
+            const openid = ctx.state.user.openid;
             
             // 构造账单数据
             const accountData = {
-                user_id: userId,
+                user_openid: openid,
                 amount: parseFloat(amount),
                 type: type,      // 1-收入 0-支出
                 category: category,       // 分类名称
-                date: new Date(),     // 账单日期
-                description: description || '',
-                created_at: new Date()
+                date: new Date(date),     // 账单日期
+                description: description || ''
             };
-
+            console.log("accountData",accountData);
             // 插入数据库
             const result = await ctx.app.mysql.insert('accounts', accountData);
             
@@ -46,14 +45,14 @@ class accountController extends Controller {
             const { type } = ctx.query;
             
             // 校验参数
-            if (typeof type === 'undefined' || !['expense', 'income'].includes(type)) {
+            if (typeof type === 'undefined' || !['0', '1'].includes(type)) {
                 return ctx.body = ctx.app.common.response.error(400, '缺少类型参数或参数不合法');
             }
             console.log("getCategory",type);
             // 查询数据库
             const categories = await ctx.app.mysql.select('categories', {
                 where: { type: parseInt(type) },
-                columns: ['id', 'name','type','category']
+                columns: ['id', 'name','type','value','icon']
             });
 
             ctx.body = ctx.app.common.response.success(categories);

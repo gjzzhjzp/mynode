@@ -35,7 +35,7 @@ module.exports = appInfo => {
       host: '47.108.224.146',     // MySQL 地址
       port: '3306',          // 端口
       user: 'root',          // 用户名
-      password: 'DiwNjHlt', // 密码
+      password: '123456', // 密码
       database: 'notebook', // 数据库名
     },
     pool: {
