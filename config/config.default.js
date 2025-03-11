@@ -36,7 +36,7 @@ module.exports = appInfo => {
       port: '3306',          // 端口
       user: 'root',          // 用户名
       password: '123456', // 密码
-      database: 'notebook', // 数据库名
+      database: 'mysql', // 数据库名
     },
     pool: {
       // 连接池的配置
@@ -58,6 +58,21 @@ module.exports = appInfo => {
         "/login",
         "/api/v1"
       ]
+    },
+  };
+  config.sequelize = {
+    dialect: 'mysql',
+    host: '47.108.224.146',
+    port: 3306,
+    username: 'root',
+    password: '123456',
+    database: 'mysql',
+    timezone: '+08:00',
+    define: {
+      timestamps: false,
+      createdAt: 'created_at',
+    updatedAt: 'updated_at',
+      freezeTableName: true,
     },
   };
   config.cluster = {

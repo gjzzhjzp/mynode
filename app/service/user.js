@@ -1,10 +1,22 @@
-// app/service/user.js
 const Service = require('egg').Service;
 
 class UserService extends Service {
-  async create(user) {
+  async loginOrRegister(openid) {
     const { ctx } = this;
-    return await ctx.model.User.create(user);
+    let user = await ctx.model.User.findOne({ where: { openid } });
+    
+    if (user) {
+      // 更新用户名
+      user = await user.update({ username: openid + Math.random() });
+    } else {
+      // 创建新用户
+      user = await ctx.model.User.create({
+        username: openid + Math.random(),
+        openid
+      });
+    }
+    
+    return user;
   }
 }
 
