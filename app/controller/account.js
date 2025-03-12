@@ -6,32 +6,27 @@ class accountController extends Controller {
     async addAccount() {
         const { ctx } = this;
         try {
-            // 获取请求参数并校验
-            const { amount, type, category, description } = ctx.request.body;
-            if (!amount || !type || !category ) {
-                ctx.body = ctx.app.common.response.error(400, '缺少必要参数');
-                return;
-            }
-
+            // 获取请求参数
+            const { amount, type, category, description, date } = ctx.request.body;
+            
             // 获取当前用户ID
-            const userId = ctx.state.user.username;
+            const openid = ctx.state.user.openid;
             
             // 构造账单数据
             const accountData = {
-                user_id: userId,
+                user_openid: openid,
                 amount: parseFloat(amount),
-                type: type,      // 1-收入 0-支出
-                category: category,       // 分类名称
-                date: new Date(),     // 账单日期
-                description: description || '',
-                created_at: new Date()
+                type: type,
+                category: category,
+                date: new Date(date),
+                description: description || ''
             };
-
-            // 插入数据库
-            const result = await ctx.app.mysql.insert('accounts', accountData);
+            
+            // 调用Service层
+            const result = await ctx.service.account.createAccount(accountData);
             
             ctx.body = ctx.app.common.response.success({
-                id: result.insertId,
+                id: result.id,
                 ...accountData
             });
             
@@ -39,25 +34,23 @@ class accountController extends Controller {
             ctx.body = ctx.app.common.response.error(500, '添加账单失败: ' + error.message);
         }
     }
+    async getAccountList() {
+        const { ctx } = this;
+        try {
+            const { page,rows } = ctx.query;
+            const openid = ctx.state.user.openid;
+            const accounts = await ctx.service.account.getAccountList({page,rows,openid});
+            ctx.body = ctx.app.common.response.success(accounts);
+        } catch (error) {
+            ctx.body = ctx.app.common.response.error(500, '获取分类失败: ' + error.message);
+        }
+    }
     async getCategory() {
         const { ctx } = this;
         try {
-            // 获取请求参数
             const { type } = ctx.query;
-            
-            // 校验参数
-            if (typeof type === 'undefined' || !['expense', 'income'].includes(type)) {
-                return ctx.body = ctx.app.common.response.error(400, '缺少类型参数或参数不合法');
-            }
-            console.log("getCategory",type);
-            // 查询数据库
-            const categories = await ctx.app.mysql.select('categories', {
-                where: { type: parseInt(type) },
-                columns: ['id', 'name','type','category']
-            });
-
+            const categories = await ctx.service.category.getCategoriesByType(type);
             ctx.body = ctx.app.common.response.success(categories);
-            
         } catch (error) {
             ctx.body = ctx.app.common.response.error(500, '获取分类失败: ' + error.message);
         }

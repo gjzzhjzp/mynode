@@ -1,12 +1,16 @@
-// app/model/user.js
 module.exports = app => {
-    const mongoose = app.mongoose;
-    const Schema = mongoose.Schema;
-  
-    const UserSchema = new Schema({
-      username: { type: String },
-      password: { type: String },
-    });
-  
-    return mongoose.model('User', UserSchema);
-  };
+  const { STRING, INTEGER, DATE } = app.Sequelize;
+
+  const User = app.model.define('users', {
+    id: { type: INTEGER, primaryKey: true, autoIncrement: true },
+    username: STRING(255),
+    openid: { type: STRING(255), unique: true },
+  }, {
+    timestamps: true,
+    createdAt: 'created_at',
+    updatedAt: 'updated_at',
+    tableName: 'users'
+  });
+
+  return User;
+};
