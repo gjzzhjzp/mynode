@@ -36,12 +36,12 @@ module.exports = appInfo => {
       port: '3306',          // 端口
       user: 'root',          // 用户名
       password: '123456', // 密码
-      database: 'mysql', // 数据库名
+      database: 'notebook', // 数据库名
     },
     pool: {
       // 连接池的配置
-      min: 0,
-      max: 1,
+      min: 2,
+      max: 10,
       idleTimeoutMillis: 30000,
     },
     app: true,     // 挂载到 app 实例
@@ -66,7 +66,7 @@ module.exports = appInfo => {
     port: 3306,
     username: 'root',
     password: '123456',
-    database: 'mysql',
+    database: 'notebook',
     timezone: '+08:00',
     define: {
       timestamps: false,

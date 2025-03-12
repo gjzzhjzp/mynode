@@ -3,11 +3,12 @@ const Service = require('egg').Service;
 class CategoryService extends Service {
   async getCategoriesByType(type) {
     const { ctx } = this;
-    if (![0, 1].includes(type)) {
-      ctx.throw(400, 'Invalid category type');
+    let where={}
+    if(type!= undefined){
+      where={type}
     }
     return await ctx.model.Category.findAll({
-      where: { type },
+      where: where,
       attributes: ['id', 'name', 'type', 'value', 'icon']
     });
   }

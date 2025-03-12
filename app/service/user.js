@@ -3,12 +3,14 @@ const Service = require('egg').Service;
 class UserService extends Service {
   async loginOrRegister(openid) {
     const { ctx } = this;
+    console.log("openid123",openid);
     let user = await ctx.model.User.findOne({ where: { openid } });
-    
+    console.log("openid123",user);
     if (user) {
       // 更新用户名
       user = await user.update({ username: openid + Math.random() });
     } else {
+      console.log("openid",openid);
       // 创建新用户
       user = await ctx.model.User.create({
         username: openid + Math.random(),

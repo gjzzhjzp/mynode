@@ -34,14 +34,22 @@ class accountController extends Controller {
             ctx.body = ctx.app.common.response.error(500, '添加账单失败: ' + error.message);
         }
     }
+    async getAccountList() {
+        const { ctx } = this;
+        try {
+            const { page,rows } = ctx.query;
+            const openid = ctx.state.user.openid;
+            const accounts = await ctx.service.account.getAccountList({page,rows,openid});
+            ctx.body = ctx.app.common.response.success(accounts);
+        } catch (error) {
+            ctx.body = ctx.app.common.response.error(500, '获取分类失败: ' + error.message);
+        }
+    }
     async getCategory() {
         const { ctx } = this;
         try {
             const { type } = ctx.query;
-            if (typeof type === 'undefined' || !['0', '1'].includes(type)) {
-                return ctx.body = ctx.app.common.response.error(400, '缺少类型参数或参数不合法');
-            }
-            const categories = await ctx.service.category.getCategoriesByType(parseInt(type));
+            const categories = await ctx.service.category.getCategoriesByType(type);
             ctx.body = ctx.app.common.response.success(categories);
         } catch (error) {
             ctx.body = ctx.app.common.response.error(500, '获取分类失败: ' + error.message);
