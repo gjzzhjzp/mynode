@@ -18,10 +18,10 @@ class accountController extends Controller {
                 amount: parseFloat(amount),
                 type: type,
                 category: category,
-                date: new Date(date),
+                date: new Date(date), // 使用北京时间,
                 description: description || ''
             };
-            
+            console.log(accountData);
             // 调用Service层
             const result = await ctx.service.account.createAccount(accountData);
             
@@ -39,10 +39,10 @@ class accountController extends Controller {
         try {
             const { page,rows } = ctx.query;
             const openid = ctx.state.user.openid;
-            const accounts = await ctx.service.account.getAccountList({page,rows,openid});
+            const accounts = await ctx.service.account.getAccountList({page,rows,openid,order: [['created_at', 'DESC']]});
             ctx.body = ctx.app.common.response.success(accounts);
         } catch (error) {
-            ctx.body = ctx.app.common.response.error(500, '获取分类失败: ' + error.message);
+            ctx.body = ctx.app.common.response.error(500, '获取账单失败: ' + error.message);
         }
     }
     async getCategory() {

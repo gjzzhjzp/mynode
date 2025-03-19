@@ -3,6 +3,7 @@
 /**
  * @param {Egg.EggAppInfo} appInfo app info
  */
+process.env.TZ = 'Asia/Shanghai';
 module.exports = appInfo => {
   /**
    * built-in config
