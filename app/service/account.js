@@ -11,15 +11,31 @@ class AccountService extends Service {
     }
     return await ctx.model.Account.create(data);
   }
-  async getAccountList({page,rows,openid,order}) {
+  async getAccountList({ page, rows, openid, order }) {
     const { ctx } = this;
     const limit = parseInt(rows, 10);  // 确保rows是数字
     const offset = (parseInt(page, 10) - 1) * limit;  // 确保page是数字并计算偏移量
     return await ctx.model.Account.findAll({
-      where: { user_openid: openid  },
+      where: { user_openid: openid },
       order: order || [['created_at', 'DESC']],  // 默认按创建时间降序排列
       limit: limit,
-      offset:offset
+      offset: offset
+    });
+  }
+  // 账单统计
+  async getStatisticsByfl({
+    openid,
+    type = 'day',
+    startDate = new Date(),
+    endDate = new Date()
+  }) {
+    const { ctx } = this;
+    
+    return await ctx.model.Account.getStatisticsByfl({
+      openid,
+      type,
+      startDate,
+      endDate
     });
   }
 }

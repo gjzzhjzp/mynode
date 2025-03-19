@@ -8,10 +8,10 @@ class accountController extends Controller {
         try {
             // 获取请求参数
             const { amount, type, category, description, date } = ctx.request.body;
-            
+
             // 获取当前用户ID
             const openid = ctx.state.user.openid;
-            
+
             // 构造账单数据
             const accountData = {
                 user_openid: openid,
@@ -24,12 +24,12 @@ class accountController extends Controller {
             console.log(accountData);
             // 调用Service层
             const result = await ctx.service.account.createAccount(accountData);
-            
+
             ctx.body = ctx.app.common.response.success({
                 id: result.id,
                 ...accountData
             });
-            
+
         } catch (error) {
             ctx.body = ctx.app.common.response.error(500, '添加账单失败: ' + error.message);
         }
@@ -37,12 +37,28 @@ class accountController extends Controller {
     async getAccountList() {
         const { ctx } = this;
         try {
-            const { page,rows } = ctx.query;
+            const { page, rows } = ctx.query;
             const openid = ctx.state.user.openid;
-            const accounts = await ctx.service.account.getAccountList({page,rows,openid,order: [['created_at', 'DESC']]});
+            const accounts = await ctx.service.account.getAccountList({ page, rows, openid, order: [['created_at', 'DESC']] });
             ctx.body = ctx.app.common.response.success(accounts);
         } catch (error) {
             ctx.body = ctx.app.common.response.error(500, '获取账单失败: ' + error.message);
+        }
+    }
+    async getStatisticsByfl() {
+        const { ctx } = this;
+        try {
+            const { type, startDate,endDate } = ctx.query;
+            const openid = ctx.state.user.openid;
+            const statistics = await ctx.service.account.getStatisticsByfl({
+                openid,
+                type: type||'day',
+                startDate: startDate||new Date(),
+                endDate: endDate||new Date()
+            });
+            ctx.body = ctx.app.common.response.success(statistics);
+        } catch (error) {
+            ctx.body = ctx.app.common.response.error(500, '获取统计失败: ' + error.message);
         }
     }
     async getCategory() {
