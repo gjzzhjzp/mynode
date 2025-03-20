@@ -95,7 +95,7 @@ module.exports = appInfo => {
 
   config.thirdApi = {
     xcx: {
-      url: "https://api.weixin.qq.com/sns/jscode2session",
+      url: "https://api.weixin.qq.com",
       appid: "wx979fff2cbd6c3e80",
       secret: "5b367c9cfe70d4a5eb3f1a1f2142b9e1",
     }

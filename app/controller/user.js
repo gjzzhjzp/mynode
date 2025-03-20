@@ -8,7 +8,7 @@ class UserController extends Controller {
       const { ctx } = this;
       const { xcx } = this.config.thirdApi;
       const { code } = ctx.request.body;
-      const url = `${xcx.url}?appid=${xcx.appid}&secret=${xcx.secret}&js_code=${code}&grant_type=authorization_code`;
+      const url = `${xcx.url}/sns/jscode2session?appid=${xcx.appid}&secret=${xcx.secret}&js_code=${code}&grant_type=authorization_code`;
 
       try {
         const data = await ctx.service.http.get(url);

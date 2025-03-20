@@ -109,5 +109,14 @@ module.exports = app => {
       raw: true
     });
   }
+  // 给用户发送通知
+  Account.getUsersForNotification = async function() {
+    return await this.findAll({
+      attributes: [
+        [app.Sequelize.fn('DISTINCT', app.Sequelize.col('user_openid')), 'openid']
+      ],
+      raw: true
+    });
+  };
   return Account;
 };
