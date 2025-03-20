@@ -36,29 +36,29 @@ module.exports = app => {
     tableName: 'accounts'
   });
   // 添加统计方法
-  Account.getStatisticsByfl = async function({ openid, type, startDate, endDate }) {
+  Account.getStatisticsByfl = async function ({ openid, type, startDate, endDate }) {
     const where = { user_openid: openid };
     if (startDate && endDate) {
       const start = new Date(startDate);
       const end = new Date(endDate);
-      
+
       // 只保留年月日部分
       const startDateOnly = new Date(start.getFullYear(), start.getMonth(), start.getDate());
       const endDateOnly = new Date(end.getFullYear(), end.getMonth(), end.getDate());
-    
+
       where.date = {
         [app.Sequelize.Op.between]: [startDateOnly, endDateOnly]
       };
       console.log('getStatistics:', openid, type, startDateOnly, endDateOnly);
     }
-  
+
     let groupBy;
     let attributes = [
       [app.Sequelize.fn('SUM', app.Sequelize.col('amount')), 'total_amount'],
       'type',
       'category'
     ];
-  
+
     switch (type) {
       case 'day':
         groupBy = [app.Sequelize.fn('DATE', app.Sequelize.col('date')), 'type', 'category'];
@@ -75,11 +75,37 @@ module.exports = app => {
       default:
         groupBy = ['type', 'category'];
     }
-  
+
     return await this.findAll({
       attributes,
       where,
       group: groupBy,
+      raw: true
+    });
+  }
+  Account.getStatistics = async function ({ openid, startDate, endDate }) {
+    const where = { user_openid: openid };
+   if (startDate && endDate) {
+      const start = new Date(startDate);
+      const end = new Date(endDate);
+
+      // 只保留年月日部分
+      const startDateOnly = new Date(start.getFullYear(), start.getMonth(), start.getDate());
+      const endDateOnly = new Date(end.getFullYear(), end.getMonth(), end.getDate());
+
+      where.date = {
+        [app.Sequelize.Op.between]: [startDateOnly, endDateOnly]
+      };
+      console.log('getStatistics:', openid, startDateOnly, endDateOnly);
+    }
+
+    return await this.findAll({
+      attributes: [
+        'type',
+        [app.Sequelize.fn('SUM', app.Sequelize.col('amount')), 'total_amount']
+      ],
+      where: where,
+      group: ['type'],
       raw: true
     });
   }

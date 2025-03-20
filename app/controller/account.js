@@ -48,13 +48,28 @@ class accountController extends Controller {
     async getStatisticsByfl() {
         const { ctx } = this;
         try {
-            const { type, startDate,endDate } = ctx.query;
+            const { type, startDate, endDate } = ctx.query;
             const openid = ctx.state.user.openid;
             const statistics = await ctx.service.account.getStatisticsByfl({
                 openid,
-                type: type||'day',
-                startDate: startDate||new Date(),
-                endDate: endDate||new Date()
+                type: type || 'day',
+                startDate: startDate || new Date(),
+                endDate: endDate || new Date()
+            });
+            ctx.body = ctx.app.common.response.success(statistics);
+        } catch (error) {
+            ctx.body = ctx.app.common.response.error(500, '获取统计失败: ' + error.message);
+        }
+    }
+    async getStatistics() {
+        const { ctx } = this;
+        try {
+            const { startDate, endDate } = ctx.query;
+            const openid = ctx.state.user.openid;
+            const statistics = await ctx.service.account.getStatistics({
+                openid,
+                startDate: startDate || new Date(),
+                endDate: endDate || new Date()
             });
             ctx.body = ctx.app.common.response.success(statistics);
         } catch (error) {

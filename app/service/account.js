@@ -38,6 +38,19 @@ class AccountService extends Service {
       endDate
     });
   }
+  async getStatistics({
+    openid,
+    startDate = new Date(),
+    endDate = new Date()
+  }) {
+    const { ctx } = this;
+    
+    return await ctx.model.Account.getStatistics({
+      openid,
+      startDate,
+      endDate
+    });
+  }
 }
 
 module.exports = AccountService;
