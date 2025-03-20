@@ -41,16 +41,17 @@ module.exports = class SendNotification extends Subscription {
         startDate,
         endDate
       });
+      console.log("statistics----------------",statistics,startDate,endDate);
 
       // 构建消息内容
       const data = {
         touser: openid,
-        template_id: 'your_template_id', // 替换为实际的小程序模板ID
+        template_id: 'fue7EGWjzjmDhZMMXeFWLq4ZG0MpfquG2y6JhMHBDzk', // 替换为实际的小程序模板ID
         page: 'pages/index/index',
         data: {
-          thing1: { value: '每日消费提醒' },
-          amount2: { value: statistics.reduce((sum, item) => sum + item.total_amount, 0).toFixed(2) },
-          date3: { value: yesterday.toLocaleDateString() }
+          thing1: { value: '￥100.00' },///昨日支出
+          thing2: { value: '￥200.00' },///昨日收入
+          thing6: { value:'$300.00' }//本月统计
         }
       };
 
