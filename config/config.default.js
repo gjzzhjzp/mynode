@@ -56,6 +56,7 @@ module.exports = appInfo => {
       cookieName: 'csrfToken', // 自定义cookie名称
       headerName: 'x-csrf-token', // 自定义header名称
       ignore: [
+        "/test",
         "/login",
         "/api/v1"
       ]
@@ -84,7 +85,7 @@ module.exports = appInfo => {
   config.jwt = {
     enable: true,
     secret: '5cb3e0edc9cb075e2be5a6c3305e2cfe1d379909ce494bec444445115f80fa92',
-    ignore: ['/login', '/api/v1'],
+    ignore: ["/test",'/login', '/api/v1'],
     expiresIn: '2h'
   };
   config.jwtAuth = {
