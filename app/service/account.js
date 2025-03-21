@@ -28,7 +28,7 @@ class AccountService extends Service {
       });
 
       if (todaySpent + data.amount > userLimit.daily_limit) {
-        await this.sendOverLimitNotification(data.user_openid, 'daily', userLimit.daily_limit);
+        await ctx.service.wechat.sendOverLimitNotification(data.user_openid, 'daily', userLimit.daily_limit);
       }
 
       // 检查每月额度
@@ -46,7 +46,7 @@ class AccountService extends Service {
       });
 
       if (monthSpent + data.amount > userLimit.monthly_limit) {
-        await this.sendOverLimitNotification(data.user_openid, 'monthly', userLimit.monthly_limit);
+        await ctx.service.wechat.sendOverLimitNotification(data.user_openid, 'monthly', userLimit.monthly_limit);
       }
 
       // 检查每年额度
@@ -65,41 +65,10 @@ class AccountService extends Service {
       });
 
       if (yearSpent + data.amount > userLimit.yearly_limit) {
-        await this.sendOverLimitNotification(data.user_openid, 'yearly', userLimit.yearly_limit);
+        await ctx.service.wechat.sendOverLimitNotification(data.user_openid, 'yearly', userLimit.yearly_limit);
       }
     }
     return await ctx.model.Account.create(data);
-  }
-  async sendOverLimitNotification(openid, limitType, limitAmount) {
-    const { ctx } = this;
-    const { xcx } = this.config.thirdApi;
-    console.log("sendOverLimitNotification----------------",openid,limitType,limitAmount);
-    try {
-      const data = {
-        touser: openid,
-        template_id: 'cZopylf8s_GkMnbN9Zk3mVCGw3ikIGP-tp0Y8YutwAs', // 替换为实际的小程序模板ID
-        page: 'pages/index/index',
-        data: {
-          thing1: { value: `超额提醒：123` },
-          amount2: { value: `限额：￥1000` },
-          time3: { value: new Date().toLocaleDateString() },
-          thing4:{value:"这是一条测试消息"}
-        }
-      };
-  
-      await ctx.curl(`${xcx.url}/cgi-bin/message/subscribe/send`, {
-        method: 'POST',
-        dataType: 'json',
-        data,
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      });
-  
-      ctx.logger.info(`成功发送超额通知给用户: ${openid}`);
-    } catch (error) {
-      ctx.logger.error(`发送超额通知给用户 ${openid} 失败:`, error);
-    }
   }
   async getAccountList({ page, rows, openid, order }) {
     const { ctx } = this;
