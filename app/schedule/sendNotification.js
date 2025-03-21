@@ -4,7 +4,7 @@ module.exports = class SendNotification extends Subscription {
   // 通过 schedule 属性来设置定时任务的执行间隔等配置
   static get schedule() {
     return {
-      interval: '10s', // 每10秒执行一次，用于测试
+      interval: '1h', // 每10秒执行一次，用于测试
       // cron: '0 0 10 * * *', // 正式环境使用，每天早上10点执行
       type: 'worker', // 指定所有的 worker 都需要执行
     };
