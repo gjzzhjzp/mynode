@@ -23,22 +23,24 @@ class WechatService extends Service {
 
         return result.data.access_token;
     }
-    async sendOverLimitNotification(openid, limitType, limitAmount) {
+    async sendOverLimitNotification(openid, limitType, limitAmount,allAmount) {
         const { ctx } = this;
         const { xcx } = this.config.thirdApi;
-        console.log("sendOverLimitNotification----------------",openid,limitType,limitAmount);
+      
+        const thing4=`您的预算为 ￥${limitAmount}，现已支出 ￥${allAmount}`;
+        console.log("sendOverLimitNotification----------------",openid,limitType,limitAmount,allAmount,allAmount-limitAmount,thing4);
         try {
           const accessToken = await this.getAccessToken();  // 获取 access_token
           const data = {
             touser: openid,
-            template_id: 'cZopylf8s_GkMnbN9Zk3mVCGw3ikIGP-tp0Y8YutwAs', // 替换为实际的小程序模板ID
+            template_id: xcx.tmplIds.overspend, // 替换为实际的小程序模板ID
             page: 'pages/index/index',
-            miniprogram_state:"trial",//developer为开发版；trial为体验版；formal为正式版；
+            miniprogram_state:xcx.miniprogram_state,
             data: {
-              thing1: { value: `超额提醒：123` },
-              amount2: { value: `限额：￥1000` },
-              time3: { value:  new Date().toLocaleString() },
-              thing4:{value:"这是一条测试消息"}
+              thing1: { value: `超额提醒：${limitType === 'daily' ? '每日预算超支' : limitType === 'monthly' ? '每月预算超支' : '每年预算超支'}` },
+              amount2: { value: `￥${allAmount-limitAmount}` },
+              time3: { value: new Date().toLocaleString() },
+              thing4: { value: "请及时调整您的消费计划" }
             }
           };
       
@@ -51,7 +53,6 @@ class WechatService extends Service {
             }
           });
           console.log("成功发送超额通知给用户result----------------",result);
-          ctx.logger.info(`成功发送超额通知给用户: ${openid}`);
         } catch (error) {
           ctx.logger.error(`发送超额通知给用户 ${openid} 失败:`, error);
         }

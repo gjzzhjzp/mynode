@@ -99,6 +99,11 @@ module.exports = appInfo => {
       url: "https://api.weixin.qq.com",
       appid: "wx979fff2cbd6c3e80",
       secret: "5b367c9cfe70d4a5eb3f1a1f2142b9e1",
+      miniprogram_state:"trial",//developer为开发版；trial为体验版；formal为正式版；
+      tmplIds:{
+        overspend:"cZopylf8s_GkMnbN9Zk3mVCGw3ikIGP-tp0Y8YutwAs",
+        daily:"fue7EGWjzjmDhZMMXeFWLq4ZG0MpfquG2y6JhMHBDzk"
+    }
     }
   }
   config.customLoader = {

@@ -42,12 +42,14 @@ module.exports = class SendNotification extends Subscription {
         endDate
       });
       console.log("statistics----------------",statistics,startDate,endDate);
+      const accessToken = await ctx.service.wechat.getAccessToken();  // 获取 access_token
 
       // 构建消息内容
       const data = {
         touser: openid,
-        template_id: 'fue7EGWjzjmDhZMMXeFWLq4ZG0MpfquG2y6JhMHBDzk', // 替换为实际的小程序模板ID
+        template_id: xcx.tmplIds.daily, // 替换为实际的小程序模板ID
         page: 'pages/index/index',
+        miniprogram_state:xcx.miniprogram_state,
         data: {
           thing1: { value: '￥100.00' },///昨日支出
           thing2: { value: '￥200.00' },///昨日收入
@@ -56,7 +58,7 @@ module.exports = class SendNotification extends Subscription {
       };
 
       // 发送模板消息
-      await ctx.curl(`${xcx.url}/cgi-bin/message/subscribe/send`, {
+     const result= await ctx.curl(`${xcx.url}/cgi-bin/message/subscribe/send?access_token=${accessToken}`, {
         method: 'POST',
         dataType: 'json',
         data,
@@ -64,7 +66,7 @@ module.exports = class SendNotification extends Subscription {
           'Content-Type': 'application/json'
         }
       });
-
+      console.log("成功发送日报通知给用户result----------------",result);
       ctx.logger.info(`成功发送通知给用户: ${openid}`);
     } catch (error) {
       ctx.logger.error(`发送通知给用户 ${openid} 失败:`, error);
