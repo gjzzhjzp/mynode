@@ -16,10 +16,17 @@ module.exports = class SendNotification extends Subscription {
     try {
       // 获取需要发送通知的用户列表
       const users = await ctx.model.Account.getUsersForNotification();
-      
+
       // 遍历用户，发送通知
       for (const user of users) {
-        await this.sendTemplateMessage(user.openid);
+        // 查询用户限额设置
+        const userLimit = await ctx.model.UserLimit.findOne({
+          where: { user_openid: user.openid }
+        });
+        // 如果用户开启日报功能，发送通知
+        if (userLimit && userLimit.open_daily) {
+          await this.sendTemplateMessage(user.openid);
+        }
       }
     } catch (error) {
       ctx.logger.error('发送通知失败:', error);
@@ -41,7 +48,7 @@ module.exports = class SendNotification extends Subscription {
         startDate,
         endDate
       });
-      console.log("statistics----------------",statistics,startDate,endDate);
+      console.log("statistics----------------", statistics, startDate, endDate);
       const accessToken = await ctx.service.wechat.getAccessToken();  // 获取 access_token
 
       // 构建消息内容
@@ -49,16 +56,16 @@ module.exports = class SendNotification extends Subscription {
         touser: openid,
         template_id: xcx.tmplIds.daily, // 替换为实际的小程序模板ID
         page: 'pages/index/index',
-        miniprogram_state:xcx.miniprogram_state,
+        miniprogram_state: xcx.miniprogram_state,
         data: {
           thing1: { value: '￥100.00' },///昨日支出
           thing2: { value: '￥200.00' },///昨日收入
-          thing6: { value:'$300.00' }//本月统计
+          thing6: { value: '$300.00' }//本月统计
         }
       };
 
       // 发送模板消息
-     const result= await ctx.curl(`${xcx.url}/cgi-bin/message/subscribe/send?access_token=${accessToken}`, {
+      const result = await ctx.curl(`${xcx.url}/cgi-bin/message/subscribe/send?access_token=${accessToken}`, {
         method: 'POST',
         dataType: 'json',
         data,
@@ -66,7 +73,7 @@ module.exports = class SendNotification extends Subscription {
           'Content-Type': 'application/json'
         }
       });
-      console.log("成功发送日报通知给用户result----------------",result);
+      console.log("成功发送日报通知给用户result----------------", result);
       ctx.logger.info(`成功发送通知给用户: ${openid}`);
     } catch (error) {
       ctx.logger.error(`发送通知给用户 ${openid} 失败:`, error);
