@@ -25,8 +25,8 @@ class AccountService extends Service {
       }
     });
 
-    if (todaySpent  > userLimit.daily_limit) {
-      await ctx.service.wechat.sendOverLimitNotification(user_openid, 'daily', userLimit.daily_limit,todaySpent );
+    if (todaySpent > userLimit.daily_limit) {
+      await ctx.service.wechat.sendOverLimitNotification(user_openid, 'daily', userLimit.daily_limit, todaySpent);
     }
 
     // 检查每月额度
@@ -43,8 +43,8 @@ class AccountService extends Service {
       }
     });
 
-    if (monthSpent  > userLimit.monthly_limit) {
-      await ctx.service.wechat.sendOverLimitNotification(user_openid, 'monthly', userLimit.monthly_limit,monthSpent );
+    if (monthSpent > userLimit.monthly_limit) {
+      await ctx.service.wechat.sendOverLimitNotification(user_openid, 'monthly', userLimit.monthly_limit, monthSpent);
     }
 
     // 检查每年额度
@@ -62,8 +62,8 @@ class AccountService extends Service {
       }
     });
 
-    if (yearSpent  > userLimit.yearly_limit) {
-      await ctx.service.wechat.sendOverLimitNotification(user_openid, 'yearly', userLimit.yearly_limit,yearSpent );
+    if (yearSpent > userLimit.yearly_limit) {
+      await ctx.service.wechat.sendOverLimitNotification(user_openid, 'yearly', userLimit.yearly_limit, yearSpent);
     }
   }
   async createAccount(data) {
@@ -72,7 +72,7 @@ class AccountService extends Service {
     if (!data.amount || data.type === undefined || !data.category || !data.date) {
       ctx.throw(400, '缺少必要参数');
     }
-    let createResult=await ctx.model.Account.create(data);
+    let createResult = await ctx.model.Account.create(data);
     // 检查额度
     this.checkLimits(data.user_openid, data.amount);
     return createResult
@@ -92,8 +92,8 @@ class AccountService extends Service {
   async getStatisticsByfl({
     openid,
     type = 'day',
-    startDate = new Date(),
-    endDate = new Date()
+    startDate,
+    endDate
   }) {
     const { ctx } = this;
 

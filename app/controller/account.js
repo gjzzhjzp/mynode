@@ -37,10 +37,10 @@ class accountController extends Controller {
     async getAccountList() {
         const { ctx } = this;
         try {
-            console.log("openid-------------123",ctx.state.user);
+            console.log("openid-------------123", ctx.state.user);
             const { page, rows } = ctx.query;
             const openid = ctx.state.user.openid;
-            console.log("openid-------------",openid);
+            console.log("openid-------------", openid);
             const accounts = await ctx.service.account.getAccountList({ page, rows, openid, order: [['created_at', 'DESC']] });
             ctx.body = ctx.app.common.response.success(accounts);
         } catch (error) {
@@ -55,8 +55,8 @@ class accountController extends Controller {
             const statistics = await ctx.service.account.getStatisticsByfl({
                 openid,
                 type: type || 'day',
-                startDate: startDate || new Date(),
-                endDate: endDate || new Date()
+                startDate: startDate,
+                endDate: endDate
             });
             ctx.body = ctx.app.common.response.success(statistics);
         } catch (error) {

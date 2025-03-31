@@ -75,7 +75,9 @@ module.exports = app => {
       default:
         groupBy = ['type', 'category'];
     }
-
+    console.log("groupBy:", groupBy);
+    console.log("attributes:", attributes);
+    console.log("where:", where);
     return await this.findAll({
       attributes,
       where,
@@ -85,7 +87,7 @@ module.exports = app => {
   }
   Account.getStatistics = async function ({ openid, startDate, endDate }) {
     const where = { user_openid: openid };
-   if (startDate && endDate) {
+    if (startDate && endDate) {
       const start = new Date(startDate);
       const end = new Date(endDate);
 
@@ -110,7 +112,7 @@ module.exports = app => {
     });
   }
   // 给用户发送通知
-  Account.getUsersForNotification = async function() {
+  Account.getUsersForNotification = async function () {
     return await this.findAll({
       attributes: [
         [app.Sequelize.fn('DISTINCT', app.Sequelize.col('user_openid')), 'openid']
