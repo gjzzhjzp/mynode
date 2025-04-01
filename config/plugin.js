@@ -23,5 +23,9 @@ module.exports = {
   schedule: {
     enable: true,
     package: 'egg-schedule',
+  },
+  validate: {
+    enable: true,
+    package: 'egg-validate'
   }
 };

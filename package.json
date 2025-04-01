@@ -14,6 +14,7 @@
     "egg-schedule": "^4.0.1",
     "egg-scripts": "2",
     "egg-sequelize": "^6.0.0",
+    "egg-validate": "^2.0.2",
     "mysql2": "^3.13.0"
   },
   "devDependencies": {

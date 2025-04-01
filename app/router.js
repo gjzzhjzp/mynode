@@ -6,5 +6,6 @@ module.exports = app => {
   require('./router/user')(app);
   require('./router/account')(app);
   require('./router/userLimit')(app);
+  require('./router/memos')(app);
 };
 

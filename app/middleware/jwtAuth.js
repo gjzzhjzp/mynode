@@ -20,9 +20,10 @@ module.exports = options => {
         if (token) {
             try {
                 // 验证token
-                console.log("token",token);
-                console.log("options.secret",options.secret);
+                // console.log("token", token);
+                // console.log("options.secret", options.secret);
                 const decoded = ctx.app.jwt.verify(token, options.secret);
+                console.log("decoded", decoded);
                 ctx.state.user = decoded; // 将解码后的用户信息存入ctx
                 await next();
             } catch (err) {
