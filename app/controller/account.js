@@ -94,13 +94,13 @@ class accountController extends Controller {
             const { id } = ctx.request.body;
             const payload = ctx.request.body;
             // 基础格式校验
-            ctx.validate({
-                amount: { type: 'number', required: false },
-                type: { type: 'string', required: false },
-                category: { type: 'string', required: false },
-                date: { type: 'date', required: false },
-                description: { type: 'string', required: false }
-            }, payload);
+            // ctx.validate({
+            //     amount: { type: 'number', required: false },
+            //     type: { type: 'string', required: false },
+            //     category: { type: 'string', required: false },
+            //     date: { type: 'date', required: false },
+            //     description: { type: 'string', required: false }
+            // }, payload);
 
             const result = await ctx.service.account.update(id, payload);
             if (result[0] === 0) {
