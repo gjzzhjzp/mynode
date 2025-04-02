@@ -88,5 +88,43 @@ class accountController extends Controller {
             ctx.body = ctx.app.common.response.error(500, '获取分类失败: ' + error.message);
         }
     }
+    async update() {
+        const { ctx } = this;
+        try {
+            const { id } = ctx.request.body;
+            const payload = ctx.request.body;
+            // 基础格式校验
+            ctx.validate({
+                amount: { type: 'number', required: false },
+                type: { type: 'string', required: false },
+                category: { type: 'string', required: false },
+                date: { type: 'date', required: false },
+                description: { type: 'string', required: false }
+            }, payload);
+
+            const result = await ctx.service.account.update(id, payload);
+            if (result[0] === 0) {
+                ctx.body = ctx.app.common.response.error(404, '账单不存在');
+            } else {
+                ctx.body = ctx.app.common.response.success({ id });
+            }
+        } catch (error) {
+            ctx.body = ctx.app.common.response.error(500, '编辑失败: ' + error.message);
+        }
+    }
+    async delete() {
+        const { ctx } = this;
+        try {
+            const { id } = ctx.request.body;
+            const result = await ctx.service.account.delete(id);
+            if (result === 0) {
+                ctx.body = ctx.app.common.response.error(404, '账单不存在');
+            } else {
+                ctx.body = ctx.app.common.response.success({ id });
+            }
+        } catch (error) {
+            ctx.body = ctx.app.common.response.error(500, '删除失败: ' + error.message);
+        }
+    }
 }
 module.exports = accountController;

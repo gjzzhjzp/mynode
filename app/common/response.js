@@ -18,5 +18,10 @@ module.exports = {
         details
         // : this.ctx.app.config.env === 'prod' ? null : details, // 生产环境隐藏细节
       };
+    },
+       // 新增公用方法：确保参数是数字类型
+       ensureNumber(value, defaultValue) {
+        const num = parseInt(value, 10);
+        return isNaN(num) ? defaultValue : num;
     }
   };

@@ -8,6 +8,8 @@ module.exports = app => {
     router.get('/account/getStatisticsByfl', controller.account.getStatisticsByfl);
     router.get('/account/getStatistics', controller.account.getStatistics);
     router.get('/category/get', controller.account.getCategory);
+    router.post('/accounts/update', controller.account.update); // 新增编辑路由
+    router.post('/accounts/delete', controller.account.delete); // 新增删除路由
   };
   
   

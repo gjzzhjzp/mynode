@@ -117,6 +117,18 @@ class AccountService extends Service {
       endDate
     });
   }
+   // 新增编辑服务
+   async update(id, payload) {
+    const { ctx } = this;
+    const openid = ctx.state.user.openid;
+    return await ctx.model.Account.updateById(id, openid, payload);
+}
+ // 新增删除服务
+ async delete(id) {
+  const { ctx } = this;
+  const openid = ctx.state.user.openid;
+  return await ctx.model.Account.deleteById(id, openid);
+}
 }
 
 module.exports = AccountService;

@@ -1,7 +1,7 @@
 module.exports = app => {
     const { STRING, TEXT, DATE, ENUM, BOOLEAN, INTEGER } = app.Sequelize;
 
-    return app.model.define('memos', {
+    const Memo = app.model.define('memos', {
         id: {
             type: INTEGER,
             primaryKey: true,
@@ -68,4 +68,27 @@ module.exports = app => {
             }
         }
     });
+    // 新增查询方法
+    Memo.getList = async ({ openid, limit, offset }) => {
+        return await Memo.findAll({
+            where: { user_openid: openid },
+            order: [['created_at', 'DESC']],
+            limit: limit,
+            offset: offset
+        });
+    };
+    // 新增删除方法
+    Memo.deleteById = async (id, openid) => {
+        return await Memo.destroy({
+            where: { id, user_openid: openid }
+        });
+    };
+     // 新增编辑方法
+     Memo.updateById = async (id, openid, payload) => {
+        return await Memo.update(payload, {
+            where: { id, user_openid: openid }
+        });
+    };
+    
+    return Memo;
 };

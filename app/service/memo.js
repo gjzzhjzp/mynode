@@ -29,6 +29,25 @@ class MemoService extends Service {
             user_openid: ctx.state.user.openid
         });
     }
+    // 新增查询服务
+    async getList({ openid, page, rows }) {
+        const { ctx } = this;
+        const limit = parseInt(rows, 10);  // 确保rows是数字
+        const offset = (parseInt(page, 10) - 1) * limit;  // 确保page是数字并计算偏移量
+        return await ctx.model.Memo.getList({ openid, limit, offset });
+    }
+    // 新增删除服务
+    async delete(id) {
+        const { ctx } = this;
+        const openid = ctx.state.user.openid;
+        return await ctx.model.Memo.deleteById(id, openid);
+    }
+    // 新增编辑服务
+    async update(id, payload) {
+        const { ctx } = this;
+        const openid = ctx.state.user.openid;
+        return await ctx.model.Memo.updateById(id, openid, payload);
+    }
 }
 
 module.exports = MemoService;

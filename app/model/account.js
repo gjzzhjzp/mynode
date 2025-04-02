@@ -120,5 +120,17 @@ module.exports = app => {
       raw: true
     });
   };
+      // 新增编辑方法
+      Account.updateById = async (id, openid, payload) => {
+        return await Account.update(payload, {
+            where: { id, user_openid: openid }
+        });
+    };
+     // 新增删除方法
+     Account.deleteById = async (id, openid) => {
+      return await Account.destroy({
+          where: { id, user_openid: openid }
+      });
+  };
   return Account;
 };
