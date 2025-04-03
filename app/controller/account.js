@@ -11,15 +11,23 @@ class accountController extends Controller {
 
             // 获取当前用户ID
             const openid = ctx.state.user.openid;
+            // 处理日期
+            const inputDate = new Date(date);
+            const now = new Date();
+            const isSameDay = inputDate.toDateString() === now.toDateString();
 
+            // 设置 created_at
+            const createdAt = isSameDay ? now : new Date(inputDate.setHours(23, 59, 59, 999));
+            // 构造账单数据
             // 构造账单数据
             const accountData = {
                 user_openid: openid,
                 amount: parseFloat(amount),
                 type: type,
                 category: category,
-                date: new Date(date), // 使用北京时间,
-                description: description || ''
+                date: inputDate, // 使用处理后的日期
+                description: description || '',
+                created_at: createdAt
             };
             console.log(accountData);
             // 调用Service层
@@ -101,7 +109,18 @@ class accountController extends Controller {
             //     date: { type: 'date', required: false },
             //     description: { type: 'string', required: false }
             // }, payload);
+            // 处理日期
+            if (payload.date) {
+                const inputDate = new Date(payload.date);
+                const now = new Date();
+                const isSameDay = inputDate.toDateString() === now.toDateString();
 
+                // 如果不是同一天，设置创建时间为当天的23:59
+                if (!isSameDay) {
+                    inputDate.setHours(23, 59, 59, 999);
+                    payload.created_at = inputDate; // 更新创建时间
+                }
+            }
             const result = await ctx.service.account.update(id, payload);
             if (result[0] === 0) {
                 ctx.body = ctx.app.common.response.error(404, '账单不存在');
