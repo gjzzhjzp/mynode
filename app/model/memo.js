@@ -40,9 +40,23 @@ module.exports = app => {
             comment: '提醒时间(UTC存储)',
             get() {
                 const rawValue = this.getDataValue('reminder_time');
-                return rawValue ? new Date(rawValue.getTime() + (8 * 60 * 60 * 1000)) : null;
+                return rawValue ? rawValue.toLocaleString('zh-CN', { timeZone: 'Asia/Shanghai' }) : null;
             }
-        }
+        },
+        created_at: {
+            type: DATE,
+            get() {
+              const rawValue = this.getDataValue('created_at');
+              return rawValue ? rawValue.toLocaleString('zh-CN', { timeZone: 'Asia/Shanghai' }) : null;
+            }
+          },
+          updated_at: {
+            type: DATE,
+            get() {
+              const rawValue = this.getDataValue('updated_at');
+              return rawValue ? rawValue.toLocaleString('zh-CN', { timeZone: 'Asia/Shanghai' }) : null;
+            }
+          }
     }, {
         timestamps: true,
         createdAt: 'created_at',
@@ -59,14 +73,14 @@ module.exports = app => {
                 name: 'idx_reminder',
                 fields: ['reminder_time']
             }
-        ],
-        hooks: {
-            beforeValidate: (memo) => {
-                if (memo.reminder_time) {
-                    memo.reminder_time = new Date(memo.reminder_time.getTime() - (8 * 60 * 60 * 1000));
-                }
-            }
-        }
+        ]
+        // hooks: {
+        //     beforeValidate: (memo) => {
+        //         if (memo.reminder_time) {
+        //             memo.reminder_time = new Date(memo.reminder_time.getTime() - (8 * 60 * 60 * 1000));
+        //         }
+        //     }
+        // }
     });
     // 新增查询方法
     Memo.getList = async ({ openid, limit, offset }) => {
@@ -87,6 +101,15 @@ module.exports = app => {
      Memo.updateById = async (id, openid, payload) => {
         return await Memo.update(payload, {
             where: { id, user_openid: openid }
+        });
+    };
+     // 新增查询方法：查找需要提醒的备忘录
+     Memo.getReminders = async () => {
+        const now = new Date();
+        return await Memo.findAll({
+            where: {
+                reminder_time: { [app.Sequelize.Op.lte]: now } // 查找 reminder_time <= 当前时间的记录
+            }
         });
     };
     

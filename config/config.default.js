@@ -102,7 +102,8 @@ module.exports = appInfo => {
       miniprogram_state:"trial",//developer为开发版；trial为体验版；formal为正式版；
       tmplIds:{
         overspend:"cZopylf8s_GkMnbN9Zk3mVCGw3ikIGP-tp0Y8YutwAs",
-        daily:"fue7EGWjzjmDhZMMXeFWLq4ZG0MpfquG2y6JhMHBDzk"
+        daily:"fue7EGWjzjmDhZMMXeFWLq4ZG0MpfquG2y6JhMHBDzk",
+        memo:"P-sAPOjEq9q435cisnwqC0qJeMG5YyYGP5QzR3GHD1Y"
     }
     }
   }

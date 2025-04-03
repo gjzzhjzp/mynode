@@ -48,6 +48,24 @@ class MemoService extends Service {
         const openid = ctx.state.user.openid;
         return await ctx.model.Memo.updateById(id, openid, payload);
     }
+    // 新增发送提醒服务
+    async sendReminders() {
+        const { ctx } = this;
+        const { xcx } = this.config.thirdApi;
+        const memos = await ctx.model.Memo.getReminders();
+        for (const memo of memos) {
+            await ctx.service.wechat.sendTemplateMessage(memo.user_openid, {
+                template_id: xcx.tmplIds.memo, // 替换为实际模板ID
+                data: {
+                    thing1: { value: memo.title },
+                    thing2: { value: memo.content },
+                    time3: { value: memo.reminder_time.toLocaleString() }
+                }
+            });
+            // 发送后删除 reminder_time，避免重复提醒
+            await ctx.model.Memo.update({ reminder_time: null }, { where: { id: memo.id } });
+        }
+    }
 }
 
 module.exports = MemoService;
