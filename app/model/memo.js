@@ -84,12 +84,16 @@ module.exports = app => {
     });
     // 新增查询方法
     Memo.getList = async ({ openid, limit, offset }) => {
-        return await Memo.findAll({
+        const result = await Memo.findAndCountAll({
             where: { user_openid: openid },
             order: [['created_at', 'DESC']],
             limit: limit,
             offset: offset
         });
+        return {
+            list: result.rows,
+            total: result.count
+        };
     };
     // 新增删除方法
     Memo.deleteById = async (id, openid) => {

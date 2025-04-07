@@ -81,50 +81,54 @@ class AccountService extends Service {
     const { ctx } = this;
     const limit = parseInt(rows, 10);  // 确保rows是数字
     const offset = (parseInt(page, 10) - 1) * limit;  // 确保page是数字并计算偏移量
-    return await ctx.model.Account.findAll({
+    const result = await ctx.model.Account.findAndCountAll({
       where: { user_openid: openid },
       order: order || [['created_at', 'DESC']],  // 默认按创建时间降序排列
       limit: limit,
       offset: offset
     });
+    return {
+      list: result.rows,
+      total: result.count
+    };
   }
   // 账单统计
   async getStatisticsByfl({
+  openid,
+  type = 'day',
+  startDate,
+  endDate
+}) {
+  const { ctx } = this;
+
+  return await ctx.model.Account.getStatisticsByfl({
     openid,
-    type = 'day',
+    type,
     startDate,
     endDate
-  }) {
-    const { ctx } = this;
-
-    return await ctx.model.Account.getStatisticsByfl({
-      openid,
-      type,
-      startDate,
-      endDate
-    });
-  }
+  });
+}
   async getStatistics({
-    openid,
-    startDate = new Date(),
-    endDate = new Date()
-  }) {
-    const { ctx } = this;
+  openid,
+  startDate = new Date(),
+  endDate = new Date()
+}) {
+  const { ctx } = this;
 
-    return await ctx.model.Account.getStatistics({
-      openid,
-      startDate,
-      endDate
-    });
-  }
+  return await ctx.model.Account.getStatistics({
+    openid,
+    startDate,
+    endDate
+  });
+}
    // 新增编辑服务
    async update(id, payload) {
-    const { ctx } = this;
-    const openid = ctx.state.user.openid;
-    return await ctx.model.Account.updateById(id, openid, payload);
+  const { ctx } = this;
+  const openid = ctx.state.user.openid;
+  return await ctx.model.Account.updateById(id, openid, payload);
 }
  // 新增删除服务
- async delete(id) {
+ async delete (id) {
   const { ctx } = this;
   const openid = ctx.state.user.openid;
   return await ctx.model.Account.deleteById(id, openid);

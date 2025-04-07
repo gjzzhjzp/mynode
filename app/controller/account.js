@@ -49,8 +49,8 @@ class accountController extends Controller {
             const { page, rows } = ctx.query;
             const openid = ctx.state.user.openid;
             console.log("openid-------------", openid);
-            const accounts = await ctx.service.account.getAccountList({ page, rows, openid, order: [['created_at', 'DESC']] });
-            ctx.body = ctx.app.common.response.success(accounts);
+            const { list, total } = await ctx.service.account.getAccountList({ page, rows, openid, order: [['created_at', 'DESC']] });
+            ctx.body = ctx.app.common.response.success(list, {}, total);
         } catch (error) {
             ctx.body = ctx.app.common.response.error(500, '获取账单失败: ' + error.message);
         }

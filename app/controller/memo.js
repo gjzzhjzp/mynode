@@ -24,7 +24,7 @@ class MemoController extends Controller {
             const { page = 1, rows = 10 } = ctx.query;
             const openid = ctx.state.user.openid;
             const result = await ctx.service.memo.getList({ openid, page, rows });
-            ctx.body = ctx.app.common.response.success(result);
+            ctx.body = ctx.app.common.response.success(result.list, { total: result.total });
         } catch (error) {
             ctx.body = ctx.app.common.response.error(500, '查询失败: ' + error.message);
         }

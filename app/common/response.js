@@ -1,11 +1,12 @@
 // app/common/response.js
 module.exports = {
     // 成功响应
-    success(data = null, extra = {}) {
+    success(data = null, extra = {},total = null) {
       return {
         code: 200,
         message: 'success',
         data,
+        total,
         ...extra,
       };
     },
