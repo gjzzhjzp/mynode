@@ -95,7 +95,7 @@ module.exports = app => {
       const startDateOnly = new Date(start.getFullYear(), start.getMonth(), start.getDate());
       const endDateOnly = new Date(end.getFullYear(), end.getMonth(), end.getDate());
 
-      where.date = {
+      where.created_at = {
         [app.Sequelize.Op.between]: [startDateOnly, endDateOnly]
       };
       console.log('getStatistics:', openid, startDateOnly, endDateOnly);
@@ -110,6 +110,7 @@ module.exports = app => {
       group: ['type'],
       raw: true
     });
+   
   }
   // 给用户发送通知
   Account.getUsersForNotification = async function () {
@@ -120,17 +121,17 @@ module.exports = app => {
       raw: true
     });
   };
-      // 新增编辑方法
-      Account.updateById = async (id, openid, payload) => {
-        return await Account.update(payload, {
-            where: { id, user_openid: openid }
-        });
-    };
-     // 新增删除方法
-     Account.deleteById = async (id, openid) => {
-      return await Account.destroy({
-          where: { id, user_openid: openid }
-      });
+  // 新增编辑方法
+  Account.updateById = async (id, openid, payload) => {
+    return await Account.update(payload, {
+      where: { id, user_openid: openid }
+    });
+  };
+  // 新增删除方法
+  Account.deleteById = async (id, openid) => {
+    return await Account.destroy({
+      where: { id, user_openid: openid }
+    });
   };
   return Account;
 };
