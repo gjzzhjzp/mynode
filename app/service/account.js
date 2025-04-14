@@ -77,10 +77,21 @@ class AccountService extends Service {
     this.checkLimits(data.user_openid, data.amount);
     return createResult
   }
-  async getAccountList({ page, rows, openid, order }) {
+  async getAccountList({ page, rows, openid, order, id }) {
     const { ctx } = this;
     const limit = parseInt(rows, 10);  // 确保rows是数字
     const offset = (parseInt(page, 10) - 1) * limit;  // 确保page是数字并计算偏移量
+    if (id) {
+      return {
+        list: [await ctx.model.Account.findOne({
+          where: {
+            id,
+            user_openid: openid
+          }
+        })],
+        total: 1
+      };
+    }
     const result = await ctx.model.Account.findAndCountAll({
       where: { user_openid: openid },
       order: order || [['created_at', 'DESC']],  // 默认按创建时间降序排列
@@ -94,45 +105,45 @@ class AccountService extends Service {
   }
   // 账单统计
   async getStatisticsByfl({
-  openid,
-  type = 'day',
-  startDate,
-  endDate
-}) {
-  const { ctx } = this;
-
-  return await ctx.model.Account.getStatisticsByfl({
     openid,
-    type,
+    type = 'day',
     startDate,
     endDate
-  });
-}
+  }) {
+    const { ctx } = this;
+
+    return await ctx.model.Account.getStatisticsByfl({
+      openid,
+      type,
+      startDate,
+      endDate
+    });
+  }
   async getStatistics({
-  openid,
-  startDate = new Date(),
-  endDate = new Date()
-}) {
-  const { ctx } = this;
-
-  return await ctx.model.Account.getStatistics({
     openid,
-    startDate,
-    endDate
-  });
-}
-   // 新增编辑服务
-   async update(id, payload) {
-  const { ctx } = this;
-  const openid = ctx.state.user.openid;
-  return await ctx.model.Account.updateById(id, openid, payload);
-}
- // 新增删除服务
- async delete (id) {
-  const { ctx } = this;
-  const openid = ctx.state.user.openid;
-  return await ctx.model.Account.deleteById(id, openid);
-}
+    startDate = new Date(),
+    endDate = new Date()
+  }) {
+    const { ctx } = this;
+
+    return await ctx.model.Account.getStatistics({
+      openid,
+      startDate,
+      endDate
+    });
+  }
+  // 新增编辑服务
+  async update(id, payload) {
+    const { ctx } = this;
+    const openid = ctx.state.user.openid;
+    return await ctx.model.Account.updateById(id, openid, payload);
+  }
+  // 新增删除服务
+  async delete(id) {
+    const { ctx } = this;
+    const openid = ctx.state.user.openid;
+    return await ctx.model.Account.deleteById(id, openid);
+  }
 }
 
 module.exports = AccountService;

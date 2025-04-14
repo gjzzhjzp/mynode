@@ -46,10 +46,10 @@ class accountController extends Controller {
         const { ctx } = this;
         try {
             console.log("openid-------------123", ctx.state.user);
-            const { page, rows } = ctx.query;
+            const { page, rows, id } = ctx.query;
             const openid = ctx.state.user.openid;
             console.log("openid-------------", openid);
-            const { list, total } = await ctx.service.account.getAccountList({ page, rows, openid, order: [['created_at', 'DESC']] });
+            const { list, total } = await ctx.service.account.getAccountList({ page, rows, openid, id, order: [['created_at', 'DESC']] });
             ctx.body = ctx.app.common.response.success(list, {}, total);
         } catch (error) {
             ctx.body = ctx.app.common.response.error(500, '获取账单失败: ' + error.message);

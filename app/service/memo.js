@@ -30,10 +30,25 @@ class MemoService extends Service {
         });
     }
     // 新增查询服务
-    async getList({ openid, page, rows }) {
+    async getList({ openid, page, rows, id }) {
         const { ctx } = this;
         const limit = parseInt(rows, 10);  // 确保rows是数字
         const offset = (parseInt(page, 10) - 1) * limit;  // 确保page是数字并计算偏移量
+        // 新增 ID 查询逻辑
+        if (id) {
+            console.log("id", id);
+            let list = await ctx.model.Memo.findOne({
+                where: {
+                    id: parseInt(id),
+                    user_openid: openid
+                }
+            })
+            console.log("id", list);
+            return {
+                list: [list],
+                total: 1
+            };
+        }
         return await ctx.model.Memo.getList({ openid, limit, offset });
     }
     // 新增删除服务

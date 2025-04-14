@@ -10,7 +10,7 @@ class MemoController extends Controller {
                 title: 'string',
                 content: { type: 'string', required: false }
             });
-            
+
             const result = await ctx.service.memo.create(payload);
             console.log("result", result);
             ctx.body = ctx.app.common.response.success(result);
@@ -21,9 +21,9 @@ class MemoController extends Controller {
     async getList() {
         const { ctx } = this;
         try {
-            const { page = 1, rows = 10 } = ctx.query;
+            const { page = 1, rows = 10, id } = ctx.query;
             const openid = ctx.state.user.openid;
-            const result = await ctx.service.memo.getList({ openid, page, rows });
+            const result = await ctx.service.memo.getList({ openid, page, rows, id });
             ctx.body = ctx.app.common.response.success(result.list, { total: result.total });
         } catch (error) {
             ctx.body = ctx.app.common.response.error(500, '查询失败: ' + error.message);
@@ -32,7 +32,7 @@ class MemoController extends Controller {
     async delete() {
         const { ctx } = this;
         try {
-            const { id } =ctx.request.body;
+            const { id } = ctx.request.body;
             const result = await ctx.service.memo.delete(id);
             if (result === 0) {
                 ctx.body = ctx.app.common.response.error(404, '备忘录不存在');
@@ -46,9 +46,9 @@ class MemoController extends Controller {
     async update() {
         const { ctx } = this;
         try {
-            
+
             const payload = ctx.request.body;
-            const id=payload.id;
+            const id = payload.id;
             // 基础格式校验
             ctx.validate({
                 title: { type: 'string', required: false },
