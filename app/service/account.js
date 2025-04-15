@@ -17,10 +17,11 @@ class AccountService extends Service {
     todayStart.setHours(0, 0, 0, 0);
     const todayEnd = new Date();
     todayEnd.setHours(23, 59, 59, 999);
-
+    console.log("检查每日额度", todayStart, todayEnd);
     const todaySpent = await ctx.model.Account.sum('amount', {
       where: {
         user_openid,
+        type: 0,
         date: { [ctx.app.Sequelize.Op.between]: [todayStart, todayEnd] }
       }
     });
@@ -39,6 +40,7 @@ class AccountService extends Service {
     const monthSpent = await ctx.model.Account.sum('amount', {
       where: {
         user_openid,
+        type: 0,
         date: { [ctx.app.Sequelize.Op.between]: [monthStart, monthEnd] }
       }
     });
@@ -58,6 +60,7 @@ class AccountService extends Service {
     const yearSpent = await ctx.model.Account.sum('amount', {
       where: {
         user_openid,
+        type: 0,
         date: { [ctx.app.Sequelize.Op.between]: [yearStart, yearEnd] }
       }
     });

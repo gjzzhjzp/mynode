@@ -87,6 +87,7 @@ module.exports = app => {
   }
   Account.getStatistics = async function ({ openid, startDate, endDate }) {
     const where = { user_openid: openid };
+    console.log('getStatistics:', startDate, endDate);
     if (startDate && endDate) {
       const start = new Date(startDate);
       const end = new Date(endDate);
@@ -110,7 +111,7 @@ module.exports = app => {
       group: ['type'],
       raw: true
     });
-   
+
   }
   // 给用户发送通知
   Account.getUsersForNotification = async function () {

@@ -37,10 +37,10 @@ class WechatService extends Service {
         page: 'pages/index/index',
         miniprogram_state: xcx.miniprogram_state,
         data: {
-          thing1: { value: `超额提醒：${limitType === 'daily' ? '每日预算超支' : limitType === 'monthly' ? '每月预算超支' : '每年预算超支'}` },
+          thing1: { value: `${limitType === 'daily' ? '每日预算超支' : limitType === 'monthly' ? '每月预算超支' : '每年预算超支'}` },
           amount2: { value: `￥${allAmount - limitAmount}` },
           time3: { value: new Date().toLocaleString() },
-          thing4: { value: "请及时调整您的消费计划" }
+          thing4: { value: `总支出￥${allAmount}，请及时调整您的消费计划` }
         }
       };
 

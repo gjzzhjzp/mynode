@@ -76,10 +76,15 @@ class accountController extends Controller {
         try {
             const { startDate, endDate } = ctx.query;
             const openid = ctx.state.user.openid;
+            // 设置默认日期范围
+            const now = new Date();
+            const defaultStart = new Date(now.setHours(0, 0, 0, 0));
+            const defaultEnd = new Date(now.setDate(now.getDate() + 1));
+            defaultEnd.setHours(0, 0, 0, 0);
             const statistics = await ctx.service.account.getStatistics({
                 openid,
-                startDate: startDate || new Date(),
-                endDate: endDate || new Date()
+                startDate: startDate || defaultStart,
+                endDate: endDate || defaultEnd
             });
             ctx.body = ctx.app.common.response.success(statistics);
         } catch (error) {
