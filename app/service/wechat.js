@@ -23,6 +23,12 @@ class WechatService extends Service {
 
     return result.data.access_token;
   }
+  async getcurrentMoment() {
+    const now = new Date();
+    const formattedDate = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}`;
+    // ctx.logger.info("当前日期:", formattedDate);
+    return formattedDate;
+  }
   async sendOverLimitNotification(openid, limitType, limitAmount, allAmount) {
     const { ctx } = this;
     const { xcx } = this.config.thirdApi;
@@ -39,7 +45,7 @@ class WechatService extends Service {
         data: {
           thing1: { value: `${limitType === 'daily' ? '每日预算超支' : limitType === 'monthly' ? '每月预算超支' : '每年预算超支'}` },
           amount2: { value: `￥${allAmount - limitAmount}` },
-          time3: { value: new Date().toLocaleString() },
+          time3: { value: await this.getcurrentMoment() },
           thing4: { value: `总支出￥${allAmount}，请及时调整您的消费计划` }
         }
       };

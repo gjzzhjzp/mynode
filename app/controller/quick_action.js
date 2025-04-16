@@ -4,13 +4,12 @@ class QuickActionController extends Controller {
   // 查询快捷功能列表
   async index() {
     const { ctx } = this;
-    const { page = 1, pageSize = 10 } = ctx.query;
-
+    const { page = 1, rows = 10 } = ctx.query;
     try {
-      const result = await ctx.service.quickAction.list(page, pageSize);
-      ctx.body = { code: 200, data: result };
+      const { list, total }  =  await ctx.service.quickAction.list(page, rows);
+      ctx.body = ctx.app.common.response.success(list, {}, total);
     } catch (error) {
-      ctx.body = { code: 500, message: '查询失败' };
+      ctx.body = ctx.app.common.response.error(500, '查询快捷功能失败: ' + error.message);
     }
   }
 }
