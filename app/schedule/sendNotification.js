@@ -29,7 +29,7 @@ module.exports = class SendNotification extends Subscription {
         }
       }
     } catch (error) {
-      ctx.logger.info.error('发送通知失败:', error);
+      ctx.logger.error('发送通知失败:', error);
     }
   }
 
@@ -79,7 +79,7 @@ module.exports = class SendNotification extends Subscription {
           expecseAccount = item.total_amount;
         }
       })
-      ctx.logger.info("statistics----------------", incomeAccount, expecseAccount,monthIncome,monthExpense, startDate, endDate);
+      ctx.logger.info("statistics----------------", incomeAccount, expecseAccount, monthIncome, monthExpense, startDate, endDate);
       // return;
       const accessToken = await ctx.service.wechat.getAccessToken();  // 获取 access_token
 
@@ -92,7 +92,7 @@ module.exports = class SendNotification extends Subscription {
         data: {
           thing1: { value: '￥' + Number(expecseAccount).toFixed(2) },///昨日支出
           thing2: { value: '￥' + Number(incomeAccount).toFixed(2) },///昨日收入
-          thing6: { value: '支出￥'+Number(monthExpense).toFixed(2)+'，收入￥'+Number(monthIncome).toFixed(2) }//本月统计
+          thing6: { value: '支出￥' + Number(monthExpense).toFixed(2) + '，收入￥' + Number(monthIncome).toFixed(2) }//本月统计
         }
       };
 
@@ -108,7 +108,7 @@ module.exports = class SendNotification extends Subscription {
       ctx.logger.info("成功发送日报通知给用户result----------------", result);
       ctx.logger.info.info(`成功发送通知给用户: ${openid}`);
     } catch (error) {
-      ctx.logger.info.error(`发送通知给用户 ${openid} 失败:`, error);
+      ctx.logger.error(`发送通知给用户 ${openid} 失败:`, error);
     }
   }
 };

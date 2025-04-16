@@ -13,13 +13,15 @@ class FeedbackService extends Service {
   }
 
   // 查询用户反馈
-  async listByUser(openid, page = 1, rows = 10) {
+  async listByUser(page = 1, rows = 10) {
     const { ctx } = this;
+    const offset = (parseInt(page, 10) - 1) * parseInt(rows, 10);
+    const limit = parseInt(rows, 10);
+
     const result = await ctx.model.Feedback.findAndCountAll({
-      where: { user_openid: openid },
       order: [['created_at', 'DESC']],
-      offset: (page - 1) * rows,
-      limit: rows,
+      offset,
+      limit,
     });
     return {
       list: result.rows,

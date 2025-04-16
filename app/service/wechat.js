@@ -60,7 +60,7 @@ class WechatService extends Service {
       });
       ctx.logger.info("成功发送超额通知给用户result----------------", result);
     } catch (error) {
-      ctx.logger.info.error(`发送超额通知给用户 ${openid} 失败:`, error);
+      ctx.logger.error(`发送超额通知给用户 ${openid} 失败:`, error);
     }
   }
   async sendTemplateMessage(openid, data) {
