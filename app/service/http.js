@@ -15,7 +15,7 @@ class HttpService extends Service {
       });
       return data;
     } catch (error) {
-      this.ctx.logger.error('HTTP请求失败', error);
+      this.ctx.logger.info.error('HTTP请求失败', error);
       throw new Error(`请求失败: ${error.message}`);
     }
   }

@@ -12,7 +12,7 @@ module.exports = () => {
       }
 
     } catch (err) {
-      ctx.logger.error('[全局错误]', err);
+      ctx.logger.info.error('[全局错误]', err);
 
       // 已知错误处理
       if (err.isBizError) { // 业务错误

@@ -17,7 +17,7 @@ class AccountService extends Service {
     todayStart.setHours(0, 0, 0, 0);
     const todayEnd = new Date();
     todayEnd.setHours(23, 59, 59, 999);
-    ctx.logger("检查每日额度", todayStart, todayEnd);
+    ctx.logger.info("检查每日额度", todayStart, todayEnd);
     const todaySpent = await ctx.model.Account.sum('amount', {
       where: {
         user_openid,

@@ -8,7 +8,7 @@ class UserLimitService extends Service {
     const existingLimit = await ctx.model.UserLimit.findOne({
       where: { user_openid }
     });
-    ctx.logger("existingLimit",existingLimit);
+    ctx.logger.info("existingLimit",existingLimit);
     if (existingLimit) {
       // 更新现有记录
       return await existingLimit.update({

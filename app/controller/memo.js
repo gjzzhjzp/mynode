@@ -12,7 +12,7 @@ class MemoController extends Controller {
             });
 
             const result = await ctx.service.memo.create(payload);
-            ctx.logger("result", result);
+            ctx.logger.info("result", result);
             ctx.body = ctx.app.common.response.success(result);
         } catch (e) {
             ctx.error(422, '数据验证失败', { errors: e.errors || [e.message] });

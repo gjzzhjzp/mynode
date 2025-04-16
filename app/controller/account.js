@@ -29,7 +29,7 @@ class accountController extends Controller {
                 description: description || '',
                 created_at: createdAt
             };
-            ctx.logger(accountData);
+            ctx.logger.info(accountData);
             // 调用Service层
             const result = await ctx.service.account.createAccount(accountData);
 
@@ -45,10 +45,10 @@ class accountController extends Controller {
     async getAccountList() {
         const { ctx } = this;
         try {
-            ctx.logger("openid-------------123", ctx.state.user);
+            ctx.logger.info("openid-------------123", ctx.state.user);
             const { page, rows, id } = ctx.query;
             const openid = ctx.state.user.openid;
-            ctx.logger("openid-------------", openid);
+            ctx.logger.info("openid-------------", openid);
             const { list, total } = await ctx.service.account.getAccountList({ page, rows, openid, id, order: [['created_at', 'DESC']] });
             ctx.body = ctx.app.common.response.success(list, {}, total);
         } catch (error) {

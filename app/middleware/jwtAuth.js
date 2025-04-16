@@ -7,7 +7,7 @@ module.exports = options => {
         }
         // 验证CSRF token
         // const csrfToken = ctx.request.header['x-csrf-token'];
-        // ctx.logger("csrfToken",csrfToken,ctx.cookies.get('csrfToken'));
+        // ctx.logger.info("csrfToken",csrfToken,ctx.cookies.get('csrfToken'));
         // if (!csrfToken || csrfToken !== ctx.cookies.get('csrfToken')) {
         //     ctx.status = 403;
         //     ctx.body = {
@@ -17,13 +17,14 @@ module.exports = options => {
         //     return;
         // }
         const token = ctx.request.header.authorization?.replace('Bearer ', '');
+        ctx.logger.info("token", token);
         if (token) {
             try {
                 // 验证token
-                // ctx.logger("token", token);
-                // ctx.logger("options.secret", options.secret);
+                // ctx.logger.info("token", token);
+                // ctx.logger.info("options.secret", options.secret);
                 const decoded = ctx.app.jwt.verify(token, options.secret);
-                ctx.logger("decoded", decoded);
+                ctx.logger.info("decoded", decoded);
                 ctx.state.user = decoded; // 将解码后的用户信息存入ctx
                 await next();
             } catch (err) {

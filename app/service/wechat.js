@@ -28,7 +28,7 @@ class WechatService extends Service {
     const { xcx } = this.config.thirdApi;
 
     const thing4 = `您的预算为 ￥${limitAmount}，现已支出 ￥${allAmount}`;
-    ctx.logger("sendOverLimitNotification----------------", openid, limitType, limitAmount, allAmount, allAmount - limitAmount, thing4);
+    ctx.logger.info("sendOverLimitNotification----------------", openid, limitType, limitAmount, allAmount, allAmount - limitAmount, thing4);
     try {
       const accessToken = await this.getAccessToken();  // 获取 access_token
       const data = {
@@ -52,9 +52,9 @@ class WechatService extends Service {
           'Content-Type': 'application/json'
         }
       });
-      ctx.logger("成功发送超额通知给用户result----------------", result);
+      ctx.logger.info("成功发送超额通知给用户result----------------", result);
     } catch (error) {
-      ctx.logger.error(`发送超额通知给用户 ${openid} 失败:`, error);
+      ctx.logger.info.error(`发送超额通知给用户 ${openid} 失败:`, error);
     }
   }
   async sendTemplateMessage(openid, data) {
@@ -70,7 +70,7 @@ class WechatService extends Service {
       },
       dataType: 'json'
     });
-    ctx.logger("成功发送备忘录给用户result----------------", result);
+    ctx.logger.info("成功发送备忘录给用户result----------------", result);
     return result.data;
   }
 }
