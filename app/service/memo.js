@@ -22,7 +22,7 @@ class MemoService extends Service {
             const localDate = new Date(payload.reminder_time);
             payload.reminder_time = new Date(localDate.getTime() - beijingOffset);
         }
-        console.log("payload2222", payload, ctx.state.user.openid)
+        ctx.logger("payload2222", payload, ctx.state.user.openid)
         // 关联当前用户
         return ctx.model.Memo.create({
             ...payload,
@@ -36,14 +36,14 @@ class MemoService extends Service {
         const offset = (parseInt(page, 10) - 1) * limit;  // 确保page是数字并计算偏移量
         // 新增 ID 查询逻辑
         if (id) {
-            console.log("id", id);
+            ctx.logger("id", id);
             let list = await ctx.model.Memo.findOne({
                 where: {
                     id: parseInt(id),
                     user_openid: openid
                 }
             })
-            console.log("id", list);
+            ctx.logger("id", list);
             return {
                 list: [list],
                 total: 1

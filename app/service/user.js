@@ -8,7 +8,7 @@ class UserService extends Service {
       // 更新用户名
       user = await user.update({ username: openid + Math.random() });
     } else {
-      console.log("openid",openid);
+      ctx.logger("openid",openid);
       // 创建新用户
       user = await ctx.model.User.create({
         username: openid + Math.random(),

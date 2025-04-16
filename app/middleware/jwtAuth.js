@@ -7,7 +7,7 @@ module.exports = options => {
         }
         // 验证CSRF token
         // const csrfToken = ctx.request.header['x-csrf-token'];
-        // console.log("csrfToken",csrfToken,ctx.cookies.get('csrfToken'));
+        // ctx.logger("csrfToken",csrfToken,ctx.cookies.get('csrfToken'));
         // if (!csrfToken || csrfToken !== ctx.cookies.get('csrfToken')) {
         //     ctx.status = 403;
         //     ctx.body = {
@@ -20,10 +20,10 @@ module.exports = options => {
         if (token) {
             try {
                 // 验证token
-                // console.log("token", token);
-                // console.log("options.secret", options.secret);
+                // ctx.logger("token", token);
+                // ctx.logger("options.secret", options.secret);
                 const decoded = ctx.app.jwt.verify(token, options.secret);
-                console.log("decoded", decoded);
+                ctx.logger("decoded", decoded);
                 ctx.state.user = decoded; // 将解码后的用户信息存入ctx
                 await next();
             } catch (err) {

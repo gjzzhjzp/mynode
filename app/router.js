@@ -7,5 +7,7 @@ module.exports = app => {
   require('./router/account')(app);
   require('./router/userLimit')(app);
   require('./router/memos')(app);
+  require('./router/feedback')(app);
+  require('./router/quick_actions')(app);
 };
 

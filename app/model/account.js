@@ -49,7 +49,7 @@ module.exports = app => {
       where.date = {
         [app.Sequelize.Op.between]: [startDateOnly, endDateOnly]
       };
-      console.log('getStatistics:', openid, type, startDateOnly, endDateOnly);
+      app.logger('getStatistics:', openid, type, startDateOnly, endDateOnly);
     }
 
     let groupBy;
@@ -75,9 +75,9 @@ module.exports = app => {
       default:
         groupBy = ['type', 'category'];
     }
-    console.log("groupBy:", groupBy);
-    console.log("attributes:", attributes);
-    console.log("where:", where);
+    app.logger("groupBy:", groupBy);
+    app.logger("attributes:", attributes);
+    app.logger("where:", where);
     return await this.findAll({
       attributes,
       where,
@@ -87,7 +87,7 @@ module.exports = app => {
   }
   Account.getStatistics = async function ({ openid, startDate, endDate }) {
     const where = { user_openid: openid };
-    console.log('getStatistics:', startDate, endDate);
+    app.logger('getStatistics:', startDate, endDate);
     if (startDate && endDate) {
       const start = new Date(startDate);
       const end = new Date(endDate);
@@ -99,7 +99,7 @@ module.exports = app => {
       where.created_at = {
         [app.Sequelize.Op.between]: [startDateOnly, endDateOnly]
       };
-      console.log('getStatistics:', openid, startDateOnly, endDateOnly);
+      app.logger('getStatistics:', openid, startDateOnly, endDateOnly);
     }
 
     return await this.findAll({

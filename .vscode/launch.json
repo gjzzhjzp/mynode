@@ -17,7 +17,8 @@
       ],
       "console": "integratedTerminal",
       "restart": true,
-      "autoAttachChildProcesses": true
+      "autoAttachChildProcesses": true,
+      "envFile": "${workspaceFolder}/.env"
     },
     {
       "type": "node",

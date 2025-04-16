@@ -79,7 +79,7 @@ module.exports = class SendNotification extends Subscription {
           expecseAccount = item.total_amount;
         }
       })
-      console.log("statistics----------------", incomeAccount, expecseAccount,monthIncome,monthExpense, startDate, endDate);
+      ctx.logger("statistics----------------", incomeAccount, expecseAccount,monthIncome,monthExpense, startDate, endDate);
       // return;
       const accessToken = await ctx.service.wechat.getAccessToken();  // 获取 access_token
 
@@ -105,7 +105,7 @@ module.exports = class SendNotification extends Subscription {
           'Content-Type': 'application/json'
         }
       });
-      console.log("成功发送日报通知给用户result----------------", result);
+      ctx.logger("成功发送日报通知给用户result----------------", result);
       ctx.logger.info(`成功发送通知给用户: ${openid}`);
     } catch (error) {
       ctx.logger.error(`发送通知给用户 ${openid} 失败:`, error);
