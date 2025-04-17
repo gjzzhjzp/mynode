@@ -122,19 +122,84 @@ class AccountService extends Service {
       endDate
     });
   }
-  async getStatistics({
-    openid,
-    startDate = new Date(),
-    endDate = new Date()
-  }) {
+  async getStatisticsByflList({ openid, startDate, endDate, page = 1, rows = 10 }) {
     const { ctx } = this;
-
-    return await ctx.model.Account.getStatistics({
-      openid,
-      startDate,
-      endDate
+    const where = { user_openid: openid };
+  
+    if (startDate && endDate) {
+      where.date = { [ctx.app.Sequelize.Op.between]: [startDate, endDate] };
+    }
+  
+    const limit = parseInt(rows, 10);  // 确保 rows 是数字
+    const offset = (parseInt(page, 10) - 1) * limit;  // 计算偏移量
+  
+    const list = await ctx.model.Account.findAll({
+      where,
+      order: [['date', 'DESC']],
+      limit,
+      offset
     });
+  
+    const total = await ctx.model.Account.count({ where });
+  
+    return { list, total };
   }
+  async getStatistics({ openid, type, startDate, endDate }) {
+    const { ctx } = this;
+    const where = { user_openid: openid };
+  
+    if (startDate && endDate) {
+      where.date = { [ctx.app.Sequelize.Op.between]: [startDate, endDate] };
+    }
+  
+    const result = await ctx.model.Account.findAll({
+      where,
+      attributes: [
+        [ctx.app.Sequelize.fn('DATE_FORMAT', ctx.app.Sequelize.col('date'), type === 'year' ? '%Y' : type === 'month' ? '%Y-%m' : '%Y-%m-%d'), 'date'],
+        'type',
+        [ctx.app.Sequelize.fn('SUM', ctx.app.Sequelize.col('amount')), 'total']
+      ],
+      group: [
+        ctx.app.Sequelize.fn('DATE_FORMAT', ctx.app.Sequelize.col('date'), type === 'year' ? '%Y' : type === 'month' ? '%Y-%m' : '%Y-%m-%d'),
+        'type'
+      ],
+      order: [[ctx.app.Sequelize.fn('DATE_FORMAT', ctx.app.Sequelize.col('date'), type === 'year' ? '%Y' : type === 'month' ? '%Y-%m' : '%Y-%m-%d'), 'DESC']]
+    });
+  
+    // 按日期分组，区分收入和支出
+    const groupedResult = result.reduce((acc, item) => {
+      const date = item.dataValues.date;
+      const type = item.dataValues.type;
+      const total = item.dataValues.total;
+  
+      if (!acc[date]) {
+        acc[date] = { date, income: 0, expense: 0 };
+      }
+  
+      if (type === 1) { // 假设 type 为 1 是收入
+        acc[date].income = total;
+      } else { // 其他为支出
+        acc[date].expense = total;
+      }
+  
+      return acc;
+    }, {});
+  
+    return Object.values(groupedResult);
+  }
+  // async getStatistics({
+  //   openid,
+  //   startDate = new Date(),
+  //   endDate = new Date()
+  // }) {
+  //   const { ctx } = this;
+
+  //   return await ctx.model.Account.getStatistics({
+  //     openid,
+  //     startDate,
+  //     endDate
+  //   });
+  // }
   // 新增编辑服务
   async update(id, payload) {
     const { ctx } = this;

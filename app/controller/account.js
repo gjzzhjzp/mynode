@@ -58,15 +58,79 @@ class accountController extends Controller {
     async getStatisticsByfl() {
         const { ctx } = this;
         try {
-            const { type, startDate, endDate } = ctx.query;
+          const { type, startDate, endDate, year, month, day } = ctx.query;
+          const openid = ctx.state.user.openid;
+      
+          // 根据传递的参数动态设置日期范围
+          let queryStartDate, queryEndDate;
+          if (year && month) {
+            // 按月查询
+            queryStartDate = new Date(year, month - 1, 1);
+            queryEndDate = new Date(year, month, 0);
+          } else if (year) {
+            // 按年查询
+            queryStartDate = new Date(year, 0, 1);
+            queryEndDate = new Date(year, 11, 31);
+          } else if (day) {
+            // 按日查询
+            queryStartDate = new Date(day);
+            queryEndDate = new Date(day);
+            queryEndDate.setHours(23, 59, 59, 999);
+          } else {
+            // 默认按天查询
+            queryStartDate = startDate ? new Date(startDate) : new Date();
+            queryEndDate = endDate ? new Date(endDate) : new Date();
+          }
+      
+          const statistics = await ctx.service.account.getStatisticsByfl({
+            openid,
+            type: type || 'day',
+            startDate: queryStartDate,
+            endDate: queryEndDate
+          });
+      
+          ctx.body = ctx.app.common.response.success(statistics);
+        } catch (error) {
+          ctx.body = ctx.app.common.response.error(500, '获取统计失败: ' + error.message);
+        }
+      }
+    async getStatisticsByflList() {
+        const { ctx } = this;
+        try {
+            const { startDate, endDate,type, year, month, day,page,rows } = ctx.query;
             const openid = ctx.state.user.openid;
-            const statistics = await ctx.service.account.getStatisticsByfl({
+
+            // 根据传递的参数动态设置日期范围
+            let queryStartDate, queryEndDate;
+            if (year && month) {
+                // 按月查询
+                queryStartDate = new Date(year, month - 1, 1);
+                queryEndDate = new Date(year, month, 0);
+            } else if (year) {
+                // 按年查询
+                queryStartDate = new Date(year, 0, 1);
+                queryEndDate = new Date(year, 11, 31);
+            } else if (day) {
+                // 按日查询
+                queryStartDate = new Date(day);
+                queryEndDate = new Date(day);
+                queryEndDate.setHours(23, 59, 59, 999);
+            } else {
+                // 默认按天查询
+                queryStartDate = startDate ? new Date(startDate) : new Date();
+                queryEndDate = endDate ? new Date(endDate) : new Date();
+            }
+
+            const { list, total } = await ctx.service.account.getStatisticsByflList({
+                page,
+                rows,
                 openid,
                 type: type || 'day',
-                startDate: startDate,
-                endDate: endDate
+                startDate: queryStartDate,
+                endDate: queryEndDate
             });
-            ctx.body = ctx.app.common.response.success(statistics);
+
+            ctx.body = ctx.app.common.response.success(list, {}, total);
         } catch (error) {
             ctx.body = ctx.app.common.response.error(500, '获取统计失败: ' + error.message);
         }
@@ -74,18 +138,35 @@ class accountController extends Controller {
     async getStatistics() {
         const { ctx } = this;
         try {
-            const { startDate, endDate } = ctx.query;
-            const openid = ctx.state.user.openid;
-            // 设置默认日期范围
-            const now = new Date();
-            const defaultStart = new Date(now.setHours(0, 0, 0, 0));
-            const defaultEnd = new Date(now.setDate(now.getDate() + 1));
-            defaultEnd.setHours(0, 0, 0, 0);
-            const statistics = await ctx.service.account.getStatistics({
-                openid,
-                startDate: startDate || defaultStart,
-                endDate: endDate || defaultEnd
-            });
+            const { startDate, endDate, type, year, month, day } = ctx.query;
+    const openid = ctx.state.user.openid;
+
+    // 根据传递的参数动态设置日期范围
+    let queryStartDate, queryEndDate;
+    if (year && month) {
+      // 按月查询
+      queryStartDate = new Date(year, month - 1, 1);
+      queryEndDate = new Date(year, month, 0);
+    } else if (year) {
+      // 按年查询
+      queryStartDate = new Date(year, 0, 1);
+      queryEndDate = new Date(year, 11, 31);
+    } else if (day) {
+      // 按日查询
+      queryStartDate = new Date(day);
+      queryEndDate = new Date(day);
+      queryEndDate.setHours(23, 59, 59, 999);
+    } else {
+      // 默认按天查询
+      queryStartDate = startDate ? new Date(startDate) : new Date();
+      queryEndDate = endDate ? new Date(endDate) : new Date();
+    }
+    const statistics = await ctx.service.account.getStatistics({
+        openid,
+        type: type || 'day',
+        startDate: queryStartDate,
+        endDate: queryEndDate
+      });
             ctx.body = ctx.app.common.response.success(statistics);
         } catch (error) {
             ctx.body = ctx.app.common.response.error(500, '获取统计失败: ' + error.message);

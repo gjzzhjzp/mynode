@@ -74,7 +74,7 @@ class MemoService extends Service {
                 data: {
                     thing1: { value: memo.title },
                     thing2: { value: memo.content },
-                    time3: { value: memo.reminder_time.toLocaleString() }
+                    time3: { value:ctx.service.wechat.getcurrentMoment(memo.reminder_time) }
                 }
             });
             // 发送后删除 reminder_time，避免重复提醒
