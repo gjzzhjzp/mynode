@@ -9,5 +9,6 @@ module.exports = app => {
   require('./router/memos')(app);
   require('./router/feedback')(app);
   require('./router/quick_actions')(app);
+  require('./router/entertainment')(app);
 };
 
