@@ -24,9 +24,10 @@ class WechatService extends Service {
     return result.data.access_token;
   }
   async getcurrentMoment(time) {
-    const now = time?new Date(time):new Date();
+    const { ctx } = this;
+    const now = time ? new Date(time) : new Date();
     const formattedDate = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}`;
-    // ctx.logger.info("当前日期:", formattedDate);
+    ctx.logger.info("当前日期:", formattedDate);
     return formattedDate;
   }
   async sendOverLimitNotification(openid, limitType, limitAmount, allAmount) {

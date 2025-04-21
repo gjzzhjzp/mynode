@@ -68,13 +68,14 @@ class MemoService extends Service {
         const { ctx } = this;
         const { xcx } = this.config.thirdApi;
         const memos = await ctx.model.Memo.getReminders();
+        console.log("--------------------------", memos)
         for (const memo of memos) {
             await ctx.service.wechat.sendTemplateMessage(memo.user_openid, {
                 template_id: xcx.tmplIds.memo, // 替换为实际模板ID
                 data: {
                     thing1: { value: memo.title },
                     thing2: { value: memo.content },
-                    time3: { value:ctx.service.wechat.getcurrentMoment(memo.reminder_time) }
+                    time3: { value: await ctx.service.wechat.getcurrentMoment() }
                 }
             });
             // 发送后删除 reminder_time，避免重复提醒

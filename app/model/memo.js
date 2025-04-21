@@ -46,17 +46,17 @@ module.exports = app => {
         created_at: {
             type: DATE,
             get() {
-              const rawValue = this.getDataValue('created_at');
-              return rawValue ? rawValue.toLocaleString('zh-CN', { timeZone: 'Asia/Shanghai' }) : null;
+                const rawValue = this.getDataValue('created_at');
+                return rawValue ? rawValue.toLocaleString('zh-CN', { timeZone: 'Asia/Shanghai' }) : null;
             }
-          },
-          updated_at: {
+        },
+        updated_at: {
             type: DATE,
             get() {
-              const rawValue = this.getDataValue('updated_at');
-              return rawValue ? rawValue.toLocaleString('zh-CN', { timeZone: 'Asia/Shanghai' }) : null;
+                const rawValue = this.getDataValue('updated_at');
+                return rawValue ? rawValue.toLocaleString('zh-CN', { timeZone: 'Asia/Shanghai' }) : null;
             }
-          }
+        }
     }, {
         timestamps: true,
         createdAt: 'created_at',
@@ -101,21 +101,25 @@ module.exports = app => {
             where: { id, user_openid: openid }
         });
     };
-     // 新增编辑方法
-     Memo.updateById = async (id, openid, payload) => {
+    // 新增编辑方法
+    Memo.updateById = async (id, openid, payload) => {
         return await Memo.update(payload, {
             where: { id, user_openid: openid }
         });
     };
-     // 新增查询方法：查找需要提醒的备忘录
-     Memo.getReminders = async () => {
+    // 新增查询方法：查找需要提醒的备忘录
+    Memo.getReminders = async () => {
         const now = new Date();
+        console.log("now--------------------", now);
         return await Memo.findAll({
             where: {
-                reminder_time: { [app.Sequelize.Op.lte]: now } // 查找 reminder_time <= 当前时间的记录
+                reminder_time: {
+                    [app.Sequelize.Op.lte]: now,
+                    [app.Sequelize.Op.ne]: null
+                } // 查找 reminder_time <= 当前时间的记录
             }
         });
     };
-    
+
     return Memo;
 };
