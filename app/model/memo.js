@@ -111,11 +111,11 @@ module.exports = app => {
     Memo.getReminders = async () => {
         const now = new Date();
         console.log("now--------------------", now);
-        const utcNow = new Date(now.getTime() - (8 * 60 * 60 * 1000)); // 将当前时间转换为 UTC 时间
+        // const utcNow = new Date(now.getTime() - (8 * 60 * 60 * 1000)); // 将当前时间转换为 UTC 时间
         const list = await Memo.findAll({
             where: {
                 reminder_time: {
-                    [app.Sequelize.Op.lte]: utcNow,
+                    [app.Sequelize.Op.lte]: now,
                     [app.Sequelize.Op.ne]: null
                 } // 查找 reminder_time <= 当前时间的记录
             }

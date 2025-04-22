@@ -107,6 +107,8 @@ class accountController extends Controller {
             let { queryStartDate, queryEndDate } = ctx.service.account.getQueryStartEnd({
                 year, month, day, startDate, endDate
             })
+            console.log("queryStartDate", queryStartDate);
+            console.log("queryStartDate", queryEndDate);
             const statistics = await ctx.service.account.getStatistics({
                 openid,
                 type: type || 'day',

@@ -3,41 +3,42 @@ const user = require('../router/user');
 const Service = require('egg').Service;
 
 class AccountService extends Service {
-    /**
-   * 根据输入参数生成查询的起始和结束日期。
-   * @param {{year: number, month: number, day: number, startDate: string|Date, endDate: string|Date}} params - 输入参数对象
-   * @param {number} [params.year] - 年份，用于按年或月查询
-   * @param {number} [params.month] - 月份（1-12），用于按月或日查询
-   * @param {number} [params.day] - 日期（1-31），用于按日查询
-   * @param {string|Date} [params.startDate] - 自定义起始日期字符串或Date对象
-   * @param {string|Date} [params.endDate] - 自定义结束日期字符串或Date对象
-   * @returns {{queryStartDate: Date, queryEndDate: Date}} 返回包含查询起始和结束日期的对象
-   */
-  getQueryStartEnd({year,month, day, startDate, endDate}) {
+  /**
+ * 根据输入参数生成查询的起始和结束日期。
+ * @param {{year: number, month: number, day: number, startDate: string|Date, endDate: string|Date}} params - 输入参数对象
+ * @param {number} [params.year] - 年份，用于按年或月查询
+ * @param {number} [params.month] - 月份（1-12），用于按月或日查询
+ * @param {number} [params.day] - 日期（1-31），用于按日查询
+ * @param {string|Date} [params.startDate] - 自定义起始日期字符串或Date对象
+ * @param {string|Date} [params.endDate] - 自定义结束日期字符串或Date对象
+ * @returns {{queryStartDate: Date, queryEndDate: Date}} 返回包含查询起始和结束日期的对象
+ */
+  getQueryStartEnd({ year, month, day, startDate, endDate }) {
     const { ctx } = this;
     let queryStartDate, queryEndDate;
-    if (year && month&&day) {
+    if (year && month && day) {
       console.log("day", year, month, day);
       // 按日查询
-      queryStartDate = new Date(year, month-1, day);
-      queryEndDate = new Date(year, month-1, day);
+      queryStartDate = new Date(year, month - 1, day);
+      queryEndDate = new Date(year, month - 1, day);
       queryEndDate.setHours(23, 59, 59, 999);
-    }else
-    if (year && month) {
-      console.log("month", year, month, day);
-      // 按月查询
-      queryStartDate = new Date(year, month - 1, 1);
-      queryEndDate = new Date(year, month, 0);
-    } else if (year) {
-      console.log("year", year, month, day);
-      // 按年查询
-      queryStartDate = new Date(year, 0, 1);
-      queryEndDate = new Date(year, 11, 31);
-    }   else {
-      // 默认按天查询
-      queryStartDate = startDate ? new Date(startDate) : new Date();
-      queryEndDate = endDate ? new Date(endDate) : new Date();
-    }
+    } else
+      if (year && month) {
+        console.log("month", year, month, day);
+        // 按月查询
+        queryStartDate = new Date(year, month - 1, 1);
+        queryEndDate = new Date(year, month, 0);
+      } else if (year) {
+        console.log("year", year, month, day);
+        // 按年查询
+        queryStartDate = new Date(year, 0, 1);
+        queryEndDate = new Date(year, 11, 31);
+      } else {
+        // 默认按天查询
+        const now = new Date();
+        queryStartDate = startDate ? new Date(startDate) : new Date(now.setHours(0, 0, 0, 0));
+        queryEndDate = endDate ? new Date(endDate) : new Date(now.setHours(23, 59, 59, 999));
+      }
     return {
       queryStartDate,
       queryEndDate,
@@ -165,33 +166,33 @@ class AccountService extends Service {
   async getStatisticsByflList({ openid, startDate, endDate, page = 1, rows = 10 }) {
     const { ctx } = this;
     const where = { user_openid: openid };
-  
+
     if (startDate && endDate) {
       where.date = { [ctx.app.Sequelize.Op.between]: [startDate, endDate] };
     }
-  
+
     const limit = parseInt(rows, 10);  // 确保 rows 是数字
     const offset = (parseInt(page, 10) - 1) * limit;  // 计算偏移量
-  
+
     const list = await ctx.model.Account.findAll({
       where,
       order: [['date', 'DESC']],
       limit,
       offset
     });
-  
+
     const total = await ctx.model.Account.count({ where });
-  
+
     return { list, total };
   }
   async getStatistics({ openid, type, startDate, endDate }) {
     const { ctx } = this;
     const where = { user_openid: openid };
-  
+
     if (startDate && endDate) {
       where.date = { [ctx.app.Sequelize.Op.between]: [startDate, endDate] };
     }
-  
+
     const result = await ctx.model.Account.findAll({
       where,
       attributes: [
@@ -205,26 +206,26 @@ class AccountService extends Service {
       ],
       order: [[ctx.app.Sequelize.fn('DATE_FORMAT', ctx.app.Sequelize.col('date'), type === 'year' ? '%Y' : type === 'month' ? '%Y-%m' : '%Y-%m-%d'), 'DESC']]
     });
-  
+
     // 按日期分组，区分收入和支出
     const groupedResult = result.reduce((acc, item) => {
       const date = item.dataValues.date;
       const type = item.dataValues.type;
       const total = item.dataValues.total;
-  
+
       if (!acc[date]) {
         acc[date] = { date, income: 0, expense: 0 };
       }
-  
+
       if (type === 1) { // 假设 type 为 1 是收入
         acc[date].income = total;
       } else { // 其他为支出
         acc[date].expense = total;
       }
-  
+
       return acc;
     }, {});
-  
+
     return Object.values(groupedResult);
   }
   // async getStatistics({

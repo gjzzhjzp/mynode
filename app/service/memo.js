@@ -17,11 +17,11 @@ class MemoService extends Service {
         ctx.validate(rules, payload);
 
         // 处理时区（前端传北京时间 -> 存储为UTC）
-        if (payload.reminder_time) {
-            const beijingOffset = 8 * 60 * 60 * 1000; // UTC+8 的毫秒数
-            const localDate = new Date(payload.reminder_time);
-            payload.reminder_time = new Date(localDate.getTime() - beijingOffset);
-        }
+        // if (payload.reminder_time) {
+        //     const beijingOffset = 8 * 60 * 60 * 1000; // UTC+8 的毫秒数
+        //     const localDate = new Date(payload.reminder_time);
+        //     payload.reminder_time = new Date(localDate.getTime() - beijingOffset);
+        // }
         ctx.logger.info("payload2222", payload, ctx.state.user.openid)
         // 关联当前用户
         return ctx.model.Memo.create({
@@ -68,7 +68,8 @@ class MemoService extends Service {
         const { ctx } = this;
         const { xcx } = this.config.thirdApi;
         const memos = await ctx.model.Memo.getReminders();
-        console.log("--------------------------", memos)
+        console.log("111--------------------------", memos);
+        // return;
         for (const memo of memos) {
             console.log("123--------------------------", memo)
             await ctx.service.wechat.sendTemplateMessage(memo.user_openid, {
