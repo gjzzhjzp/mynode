@@ -70,11 +70,14 @@ class MemoService extends Service {
         const memos = await ctx.model.Memo.getReminders();
         console.log("--------------------------", memos)
         for (const memo of memos) {
+            console.log("123--------------------------", memo)
             await ctx.service.wechat.sendTemplateMessage(memo.user_openid, {
                 template_id: xcx.tmplIds.memo, // 替换为实际模板ID
+                page: 'memo/index/index',
+                miniprogram_state: xcx.miniprogram_state,
                 data: {
-                    thing1: { value: memo.title },
-                    thing2: { value: memo.content },
+                    thing1: { value: memo.title.length > 15 ? `${memo.title.substring(0, 10)}...` : memo.title },
+                    thing2: { value: "点我查看详细内容哦~" },
                     time3: { value: await ctx.service.wechat.getcurrentMoment() }
                 }
             });
