@@ -121,7 +121,7 @@ module.exports = app => {
             }
         });
         console.log("list--------------------", list);
-        return [];
+        return list;
     };
 
     return Memo;
