@@ -58,6 +58,7 @@ module.exports = appInfo => {
       ignore: [
         "/test",
         "/login",
+        "/xcxm",
         "/api/v1"
       ]
     },
@@ -85,7 +86,7 @@ module.exports = appInfo => {
   config.jwt = {
     enable: true,
     secret: '5cb3e0edc9cb075e2be5a6c3305e2cfe1d379909ce494bec444445115f80fa92',
-    ignore: ["/test",'/login', '/api/v1'],
+    ignore: ["/test",'/login', '/api/v1','/xcxm'],
     expiresIn: '2h'
   };
   config.jwtAuth = {
