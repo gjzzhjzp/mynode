@@ -9,7 +9,7 @@ class HomeController extends Controller {
   async xcxm(){
     const { ctx } = this;
     const { xcx } = this.config.thirdApi;
-  
+    const { path='pages/index/index' } = ctx.query;
     try {
       // 获取 access_token
       const accessToken = await ctx.service.wechat.getAccessToken();
@@ -20,7 +20,7 @@ class HomeController extends Controller {
         contentType: 'json', // 明确指定请求头为 JSON
         dataType: 'buffer', // 返回二进制数据
         data: {
-          path: 'pages/index/index', // 小程序页面路径
+          path: path, // 小程序页面路径
           width: 430, // 二维码宽度
           is_hyaline: false // 是否透明背景
         }
