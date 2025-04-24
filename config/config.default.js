@@ -37,7 +37,7 @@ module.exports = appInfo => {
       port: '3306',          // 端口
       user: 'root2',          // 用户名
       password: '123456', // 密码
-      database: 'notebook', // 数据库名
+      database: 'notebook2', // 数据库名
     },
     pool: {
       // 连接池的配置
@@ -74,7 +74,7 @@ module.exports = appInfo => {
     define: {
       timestamps: false,
       createdAt: 'created_at',
-    updatedAt: 'updated_at',
+      updatedAt: 'updated_at',
       freezeTableName: true,
     },
   };
@@ -86,7 +86,7 @@ module.exports = appInfo => {
   config.jwt = {
     enable: true,
     secret: '5cb3e0edc9cb075e2be5a6c3305e2cfe1d379909ce494bec444445115f80fa92',
-    ignore: ["/test",'/login', '/api/v1','/xcxm'],
+    ignore: ["/test", '/login', '/api/v1', '/xcxm'],
     expiresIn: '2h'
   };
   config.jwtAuth = {
@@ -100,12 +100,12 @@ module.exports = appInfo => {
       url: "https://api.weixin.qq.com",
       appid: "wx979fff2cbd6c3e80",
       secret: "5b367c9cfe70d4a5eb3f1a1f2142b9e1",
-      miniprogram_state:"formal",//developer为开发版；trial为体验版；formal为正式版；
-      tmplIds:{
-        overspend:"cZopylf8s_GkMnbN9Zk3mVCGw3ikIGP-tp0Y8YutwAs",
-        daily:"fue7EGWjzjmDhZMMXeFWLq4ZG0MpfquG2y6JhMHBDzk",
-        memo:"P-sAPOjEq9q435cisnwqC0qJeMG5YyYGP5QzR3GHD1Y"
-    }
+      miniprogram_state: "formal",//developer为开发版；trial为体验版；formal为正式版；
+      tmplIds: {
+        overspend: "cZopylf8s_GkMnbN9Zk3mVCGw3ikIGP-tp0Y8YutwAs",
+        daily: "fue7EGWjzjmDhZMMXeFWLq4ZG0MpfquG2y6JhMHBDzk",
+        memo: "P-sAPOjEq9q435cisnwqC0qJeMG5YyYGP5QzR3GHD1Y"
+      }
     }
   }
   config.customLoader = {
