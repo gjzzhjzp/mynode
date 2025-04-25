@@ -35,6 +35,11 @@ module.exports = app => {
             defaultValue: false,
             comment: '重要标记'
         },
+        is_done: {
+            type: BOOLEAN,
+            defaultValue: false,
+            comment: '是否已办'
+        },
         reminder_time: {
             type: DATE,
             comment: '提醒时间(UTC存储)',
@@ -86,7 +91,7 @@ module.exports = app => {
     Memo.getList = async ({ openid, limit, offset }) => {
         const result = await Memo.findAndCountAll({
             where: { user_openid: openid },
-            order: [['created_at', 'DESC']],
+            order: [['is_done', 'ASC'], ['created_at', 'DESC']],
             limit: limit,
             offset: offset
         });
@@ -96,15 +101,21 @@ module.exports = app => {
         };
     };
     // 新增删除方法
-    Memo.deleteById = async (id, openid) => {
+    Memo.deleteById = async (ids, openid) => {
         return await Memo.destroy({
-            where: { id, user_openid: openid }
+            where: {
+                id: { [app.Sequelize.Op.in]: ids }, // 支持多个 ID
+                user_openid: openid
+            }
         });
     };
     // 新增编辑方法
-    Memo.updateById = async (id, openid, payload) => {
+    Memo.updateById = async (ids, openid, payload) => {
         return await Memo.update(payload, {
-            where: { id, user_openid: openid }
+            where: {
+                id: { [app.Sequelize.Op.in]: ids }, // 支持多个 ID
+                user_openid: openid
+            }
         });
     };
     // 新增查询方法：查找需要提醒的备忘录

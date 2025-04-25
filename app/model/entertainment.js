@@ -25,7 +25,7 @@ module.exports = app => {
       where,
       limit: parseInt(rows, 10),
       offset: (parseInt(page, 10) - 1) * parseInt(rows, 10),
-      order: [['created_at', 'DESC']]
+      order: [["sort_order", "ASC"], ['created_at', 'DESC']]
     });
 
     return { list: result.rows, total: result.count };

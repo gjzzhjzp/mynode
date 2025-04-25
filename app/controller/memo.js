@@ -33,7 +33,8 @@ class MemoController extends Controller {
         const { ctx } = this;
         try {
             const { id } = ctx.request.body;
-            const result = await ctx.service.memo.delete(id);
+            const ids = String(id).split(',').map(id => parseInt(id, 10)); // 将字符串转换为数字数组
+            const result = await ctx.service.memo.delete(ids);
             if (result === 0) {
                 ctx.body = ctx.app.common.response.error(404, '备忘录不存在');
             } else {
@@ -49,13 +50,14 @@ class MemoController extends Controller {
 
             const payload = ctx.request.body;
             const id = payload.id;
+            const ids = String(payload.id).split(',').map(id => parseInt(id, 10)); // 将字符串转换为数字数组
             // 基础格式校验
             ctx.validate({
                 title: { type: 'string', required: false },
                 content: { type: 'string', required: false }
             }, payload);
-
-            const result = await ctx.service.memo.update(id, payload);
+            delete payload.id;
+            const result = await ctx.service.memo.update(ids, payload);
             if (result[0] === 0) {
                 ctx.body = ctx.app.common.response.error(404, '备忘录不存在');
             } else {

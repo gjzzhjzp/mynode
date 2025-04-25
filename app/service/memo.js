@@ -52,16 +52,16 @@ class MemoService extends Service {
         return await ctx.model.Memo.getList({ openid, limit, offset });
     }
     // 新增删除服务
-    async delete(id) {
+    async delete(ids) {
         const { ctx } = this;
         const openid = ctx.state.user.openid;
-        return await ctx.model.Memo.deleteById(id, openid);
+        return await ctx.model.Memo.deleteById(ids, openid);
     }
     // 新增编辑服务
-    async update(id, payload) {
+    async update(ids, payload) {
         const { ctx } = this;
         const openid = ctx.state.user.openid;
-        return await ctx.model.Memo.updateById(id, openid, payload);
+        return await ctx.model.Memo.updateById(ids, openid, payload);
     }
     // 新增发送提醒服务
     async sendReminders() {

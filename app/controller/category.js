@@ -4,10 +4,10 @@ class CategoryController extends Controller {
     async add() {
         const { ctx } = this;
         try {
-            const { name, type, value, icon } = ctx.request.body;
-
+            const { name, type = 0, value, icon } = ctx.request.body;
+            const openid = ctx.state.user.openid; // 获取当前用户 openid
             // 参数校验
-            if (!name || !type || value === undefined) {
+            if (!name || value === undefined) {
                 ctx.throw(400, '缺少必要参数');
             }
 
@@ -16,8 +16,9 @@ class CategoryController extends Controller {
                 name,
                 type,
                 value,
-                icon: icon || '',
-                status: 1 // 默认启用
+                icon: icon || 'icon-fenlei',
+                status: 1, // 默认启用
+                user_openid: openid // 关联当前用户
             });
 
             ctx.body = ctx.app.common.response.success(category);
