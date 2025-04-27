@@ -120,18 +120,7 @@ class accountController extends Controller {
             ctx.body = ctx.app.common.response.error(500, '获取统计失败: ' + error.message);
         }
     }
-    async getCategory() {
-        const { ctx } = this;
-        try {
-            const { type } = ctx.query;
-            const categories = await ctx.service.category.getCategoriesByType(type);
-            // 按照 sort_order 升序排序
-            categories.sort((a, b) => (a.sort_order || 99) - (b.sort_order || 99));
-            ctx.body = ctx.app.common.response.success(categories);
-        } catch (error) {
-            ctx.body = ctx.app.common.response.error(500, '获取分类失败: ' + error.message);
-        }
-    }
+
     async update() {
         const { ctx } = this;
         try {

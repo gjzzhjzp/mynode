@@ -1,16 +1,34 @@
 const Service = require('egg').Service;
 
 class CategoryService extends Service {
-  async getCategoriesByType(type) {
+  async getCategoriesByType(type, openid) {
     const { ctx } = this;
-    let where = {}
+    let where = {
+      [ctx.app.Sequelize.Op.or]: [
+        { user_openid: null },
+        { user_openid: openid }
+      ]
+    }
     if (type != undefined) {
-      where = { type }
+      where.type = type;
     }
     return await ctx.model.Category.findAll({
       where: where,
       attributes: ['id', 'name', 'type', 'value', 'icon', 'sort_order'],
-      order: [['sort_order', 'ASC']]
+      order: [['sort_order', 'ASC'], ['id', 'ASC']]
+    });
+  }
+  async update(id, openid, payload) {
+    const { ctx } = this;
+    return await ctx.model.Category.update(payload, {
+      where: { id, user_openid: openid }
+    });
+  }
+
+  async delete(id, openid) {
+    const { ctx } = this;
+    return await ctx.model.Category.destroy({
+      where: { id, user_openid: openid }
     });
   }
 }
