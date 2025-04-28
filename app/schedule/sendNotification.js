@@ -106,7 +106,7 @@ module.exports = class SendNotification extends Subscription {
         }
       });
       ctx.logger.info("成功发送日报通知给用户result----------------", result);
-      ctx.logger.info.info(`成功发送通知给用户: ${openid}`);
+      ctx.logger.info(`成功发送通知给用户: ${openid}`);
     } catch (error) {
       ctx.logger.error(`发送通知给用户 ${openid} 失败:`, error);
     }

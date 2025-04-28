@@ -13,3 +13,6 @@ run/
 *.un~
 typings/
 .nyc_output/
+.env
+.enc_key
+.enc_iv
