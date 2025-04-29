@@ -45,7 +45,7 @@ class CategoryController extends Controller {
             const openid = ctx.state.user.openid;
 
             // 参数校验
-            if (!id || !name || value === undefined) {
+            if (!id || !name) {
                 ctx.throw(400, '缺少必要参数');
             }
 
