@@ -68,7 +68,7 @@ class AccountService extends Service {
     });
 
     if (todaySpent > userLimit.daily_limit) {
-      await ctx.service.wechat.sendOverLimitNotification(user_openid, 'daily', userLimit.daily_limit, todaySpent);
+      await ctx.service.wechat.sendOverLimitNotification(user_openid, 'daily', userLimit.daily_limit, todaySpent, userLimit.currency);
     }
 
     // 检查每月额度
@@ -87,7 +87,7 @@ class AccountService extends Service {
     });
 
     if (monthSpent > userLimit.monthly_limit) {
-      await ctx.service.wechat.sendOverLimitNotification(user_openid, 'monthly', userLimit.monthly_limit, monthSpent);
+      await ctx.service.wechat.sendOverLimitNotification(user_openid, 'monthly', userLimit.monthly_limit, monthSpent, userLimit.currency);
     }
 
     // 检查每年额度
@@ -107,7 +107,7 @@ class AccountService extends Service {
     });
 
     if (yearSpent > userLimit.yearly_limit) {
-      await ctx.service.wechat.sendOverLimitNotification(user_openid, 'yearly', userLimit.yearly_limit, yearSpent);
+      await ctx.service.wechat.sendOverLimitNotification(user_openid, 'yearly', userLimit.yearly_limit, yearSpent, userLimit.currency);
     }
   }
   async createAccount(data) {

@@ -24,8 +24,9 @@ module.exports = class SendNotification extends Subscription {
           where: { user_openid: user.openid }
         });
         // 如果用户开启日报功能，发送通知
+
         if (userLimit && userLimit.open_daily) {
-          await this.sendTemplateMessage(user.openid);
+          await this.sendTemplateMessage(user.openid, userLimit.currency || "￥");
         }
       }
     } catch (error) {
@@ -33,7 +34,7 @@ module.exports = class SendNotification extends Subscription {
     }
   }
 
-  async sendTemplateMessage(openid) {
+  async sendTemplateMessage(openid, currency = "￥") {
     const { ctx } = this;
     const { xcx } = this.config.thirdApi;
     try {
@@ -90,9 +91,9 @@ module.exports = class SendNotification extends Subscription {
         page: 'pages/index/index',
         miniprogram_state: xcx.miniprogram_state,
         data: {
-          thing1: { value: '￥' + Number(expecseAccount).toFixed(2) },///昨日支出
-          thing2: { value: '￥' + Number(incomeAccount).toFixed(2) },///昨日收入
-          thing6: { value: '支出￥' + Number(monthExpense).toFixed(2) + '，收入￥' + Number(monthIncome).toFixed(2) }//本月统计
+          thing1: { value: currency + Number(expecseAccount).toFixed(2) },///昨日支出
+          thing2: { value: currency + Number(incomeAccount).toFixed(2) },///昨日收入
+          thing6: { value: '支出' + currency + Number(monthExpense).toFixed(2) + '，收入' + currency + Number(monthIncome).toFixed(2) }//本月统计
         }
       };
 
