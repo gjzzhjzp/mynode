@@ -4,6 +4,7 @@
  * @param {Egg.EggAppInfo} appInfo app info
  */
 require('dotenv').config();
+const path = require('path');
 console.log('MYSQL_HOST:', process.env.MYSQL_HOST);
 module.exports = appInfo => {
   /**
@@ -109,6 +110,11 @@ module.exports = appInfo => {
       }
     }
   }
+  console.log("appInfo.baseDir", appInfo.baseDir);
+  config.static = {
+    prefix: '/static/', // 访问路径前缀
+    dir: path.join(appInfo.baseDir, 'app/public') // 静态文件存放目录
+  };
   config.customLoader = {
     common: {
       directory: 'app/common', // 指定加载目录

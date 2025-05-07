@@ -134,5 +134,19 @@ module.exports = app => {
       where: { id, user_openid: openid }
     });
   };
+  // 按年导出账单
+  Account.getYearlyBills = async function (openid, year) {
+    const startDate = new Date(year, 0, 1);
+    const endDate = new Date(year, 11, 31);
+
+    return await this.findAll({
+      where: {
+        user_openid: openid,
+        date: { [app.Sequelize.Op.between]: [startDate, endDate] }
+      },
+      order: [['date', 'DESC']],
+      raw: true
+    });
+  };
   return Account;
 };

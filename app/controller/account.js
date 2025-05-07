@@ -1,7 +1,8 @@
 // app/controller/user.js
 const Controller = require('egg').Controller;
 const axios = require('axios');
-
+const ExcelJS = require('exceljs');
+const path = require('path');
 class accountController extends Controller {
     async addAccount() {
         const { ctx } = this;
@@ -168,6 +169,61 @@ class accountController extends Controller {
             }
         } catch (error) {
             ctx.body = ctx.app.common.response.error(500, '删除失败: ' + error.message);
+        }
+    }
+    async exportYearly() {
+        const { ctx } = this;
+        try {
+            const { year } = ctx.query;
+            const openid = ctx.state.user.openid;
+
+            if (!year || !/^\d{4}$/.test(year)) {
+                ctx.throw(400, '年份格式错误');
+            }
+
+            // 获取账单数据
+            const bills = await ctx.model.Account.getYearlyBills(openid, year);
+
+            // 生成 Excel 文件
+            const workbook = new ExcelJS.Workbook();
+            const worksheet = workbook.addWorksheet('账单');
+
+            // 添加表头
+            worksheet.columns = [
+                { header: '日期', key: 'date', width: 20 },
+                { header: '类型', key: 'type', width: 10 },
+                { header: '类别', key: 'category', width: 15 },
+                { header: '金额', key: 'amount', width: 15 },
+                { header: '描述', key: 'description', width: 30 }
+            ];
+            // 修改数据添加部分
+            const categoryMap = new Map();
+            const categories = await ctx.model.Category.findAll();
+
+            // 构建类别映射
+            categories.forEach(category => {
+                categoryMap.set(category.value, category.name);
+            });
+            // 添加数据
+            bills.forEach(bill => {
+                worksheet.addRow({
+                    date: bill.date,
+                    type: bill.type ? '收入' : '支出',
+                    category: categoryMap.get(bill.category) || bill.category,
+                    amount: bill.amount,
+                    description: bill.description
+                });
+            });
+
+            // 保存文件到服务器
+            const filePath = `app/public/exports/${year}_账单_${openid}_${Date.now()}.xlsx`;
+            await workbook.xlsx.writeFile(filePath);
+
+            // 返回文件地址
+            const fileUrl = `/static/exports/${path.basename(filePath)}`;
+            ctx.body = ctx.app.common.response.success({ url: fileUrl });
+        } catch (error) {
+            ctx.body = ctx.app.common.response.error(500, `导出失败: ${error.message}`);
         }
     }
 }
