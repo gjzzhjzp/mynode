@@ -190,7 +190,7 @@ class accountController extends Controller {
 
             // 添加表头
             worksheet.columns = [
-                { header: '日期', key: 'date', width: 20 },
+                { header: '日期', key: 'created_at', width: 20 },
                 { header: '类型', key: 'type', width: 10 },
                 { header: '类别', key: 'category', width: 15 },
                 { header: '金额', key: 'amount', width: 15 },
@@ -206,8 +206,9 @@ class accountController extends Controller {
             });
             // 添加数据
             bills.forEach(bill => {
+                console.log("bill.created_at", bill.created_at);
                 worksheet.addRow({
-                    date: bill.date,
+                    created_at: new Date(bill.created_at).toLocaleString('zh-CN', { timeZone: 'Asia/Shanghai', hour12: false }),
                     type: bill.type ? '收入' : '支出',
                     category: categoryMap.get(bill.category) || bill.category,
                     amount: bill.amount,

@@ -144,7 +144,7 @@ module.exports = app => {
         user_openid: openid,
         date: { [app.Sequelize.Op.between]: [startDate, endDate] }
       },
-      order: [['date', 'DESC']],
+      order: [['created_at', 'DESC']],
       raw: true
     });
   };

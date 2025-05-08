@@ -16,4 +16,4 @@ typings/
 .env
 .enc_key
 .enc_iv
-public/exports/
+public/
