@@ -81,7 +81,7 @@ class accountController extends Controller {
     async getStatisticsByflList() {
         const { ctx } = this;
         try {
-            const { startDate, endDate, type, year, month, day, page, rows } = ctx.query;
+            const { startDate, endDate, type, year, month, day, page, rows, category } = ctx.query;
             const openid = ctx.state.user.openid;
             let { queryStartDate, queryEndDate } = ctx.service.account.getQueryStartEnd({
                 year, month, day, startDate, endDate
@@ -92,6 +92,7 @@ class accountController extends Controller {
                 openid,
                 type: type || 'day',
                 startDate: queryStartDate,
+                category,
                 endDate: queryEndDate
             });
 

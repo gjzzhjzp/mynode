@@ -13,6 +13,10 @@ module.exports = app => {
             allowNull: false,
             comment: '关联微信用户'
         },
+        image: {
+            type: STRING(255),
+            comment: '图片路径'
+        },
         title: {
             type: STRING(100),
             allowNull: false,

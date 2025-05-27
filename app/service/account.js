@@ -163,9 +163,13 @@ class AccountService extends Service {
       endDate
     });
   }
-  async getStatisticsByflList({ openid, startDate, endDate, page = 1, rows = 10 }) {
+  async getStatisticsByflList({ openid, startDate, endDate, page = 1, rows = 10, category }) {
     const { ctx } = this;
-    const where = { user_openid: openid };
+    const where = {
+      user_openid: openid,
+      // 新增分类过滤条件
+      ...(category && { category })
+    };
 
     if (startDate && endDate) {
       where.date = { [ctx.app.Sequelize.Op.between]: [startDate, endDate] };

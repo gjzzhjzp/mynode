@@ -17,6 +17,7 @@
     "egg-sequelize": "^6.0.0",
     "egg-validate": "^2.0.2",
     "exceljs": "^4.4.0",
+    "fs-extra": "^11.3.0",
     "mysql2": "^3.13.0"
   },
   "devDependencies": {

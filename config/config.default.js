@@ -122,6 +122,10 @@ module.exports = appInfo => {
       loadunit: true,         // 支持在单元测试时加载
     }
   };
+  config.multipart = {
+    mode: 'file',
+    fileSize: '10mb'
+  };
   config.env = "prod";
   return {
     ...config,
