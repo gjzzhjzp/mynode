@@ -13,7 +13,8 @@ module.exports = app => {
       defaultValue: '￥',
       comment: '记账币种'
     },
-    open_daily: { type: BOOLEAN, defaultValue: false, allowNull: false } // 新增字段
+    open_daily: { type: BOOLEAN, defaultValue: false, allowNull: false }, // 新增字段
+    open_accountReminder: { type: BOOLEAN, defaultValue: false, allowNull: false, comment: '是否开启记账提醒' }
   }, {
     timestamps: true,
     createdAt: 'created_at',

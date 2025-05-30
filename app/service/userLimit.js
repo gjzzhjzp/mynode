@@ -1,7 +1,7 @@
 const Service = require('egg').Service;
 
 class UserLimitService extends Service {
-  async addOrUpdate({ user_openid, daily_limit, monthly_limit, yearly_limit, open_daily, currency }) {
+  async addOrUpdate({ user_openid, daily_limit, monthly_limit, yearly_limit, open_daily,open_accountReminder, currency }) {
     const { ctx } = this;
 
     // 查找是否已存在
@@ -14,6 +14,7 @@ class UserLimitService extends Service {
     if (typeof monthly_limit != "undefined") parames.monthly_limit = monthly_limit;
     if (typeof yearly_limit != "undefined") parames.yearly_limit = yearly_limit;
     if (typeof open_daily != "undefined") parames.open_daily = open_daily;
+    if (typeof open_accountReminder != "undefined") parames.open_accountReminder = open_accountReminder;
     if (typeof currency != "undefined") parames.currency = currency || "￥";
     if (existingLimit) {
       // 更新现有记录

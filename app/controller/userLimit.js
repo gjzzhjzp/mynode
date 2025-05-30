@@ -5,7 +5,7 @@ class UserLimitController extends Controller {
         const { ctx } = this;
         try {
             // 获取请求参数
-            const { daily_limit, monthly_limit, yearly_limit, open_daily, currency } = ctx.request.body;
+            const { daily_limit, monthly_limit, yearly_limit, open_daily,open_accountReminder, currency } = ctx.request.body;
             // 获取当前用户ID
             const openid = ctx.state.user.openid;
             // 参数校验
@@ -17,6 +17,7 @@ class UserLimitController extends Controller {
             if (typeof monthly_limit != "undefined") parames.monthly_limit = parseFloat(monthly_limit || 0);
             if (typeof yearly_limit != "undefined") parames.yearly_limit = parseFloat(yearly_limit || 0);
             if (typeof open_daily != "undefined") parames.open_daily = open_daily;
+            if (typeof open_accountReminder != "undefined") parames.open_accountReminder = open_accountReminder;
             if (typeof currency != "undefined") parames.currency = currency || "￥";
 
             // 调用Service层
