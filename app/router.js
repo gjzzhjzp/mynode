@@ -11,5 +11,6 @@ module.exports = app => {
   require('./router/quick_actions')(app);
   require('./router/entertainment')(app);
   require('./router/category')(app);
+  require('./router/notices')(app);
 };
 

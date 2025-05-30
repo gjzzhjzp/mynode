@@ -1,3 +1,4 @@
+require('dotenv').config();
 module.exports = {
   // 日志配置
   logger: {
@@ -9,11 +10,11 @@ module.exports = {
   // 数据库配置
   sequelize: {
     dialect: 'mysql',
-    host: '47.108.224.146',
-    port: 3306,
-    username: 'root2',
-    password: '123456',
-    database: 'notebook',
+    host: process.env.MYSQL_HOST,
+    port: process.env.MYSQL_PORT,
+    user: process.env.MYSQL_USER,
+    password: process.env.MYSQL_PASSWORD,
+    database: process.env.MYSQL_DATABASE,
     timezone: '+08:00',
     define: {
       timestamps: false,
@@ -37,7 +38,7 @@ module.exports = {
 
   // JWT 配置
   jwt: {
-    secret: '5cb3e0edc9cb075e2be5a6c3305e2cfe1d379909ce494bec444445115f80fa92',
+    secret: process.env.JWT_SECRET,
     expiresIn: '2h',
   },
 };

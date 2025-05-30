@@ -3,7 +3,9 @@
 /**
  * @param {Egg.EggAppInfo} appInfo app info
  */
-process.env.TZ = 'Asia/Shanghai';
+require('dotenv').config();
+const path = require('path');
+console.log('MYSQL_HOST:', process.env.MYSQL_HOST);
 module.exports = appInfo => {
   /**
    * built-in config
@@ -33,11 +35,11 @@ module.exports = appInfo => {
   // };
   config.mysql = {
     client: {
-      host: '47.108.224.146',     // MySQL 地址
-      port: '3306',          // 端口
-      user: 'root2',          // 用户名
-      password: '123456', // 密码
-      database: 'notebook2', // 数据库名
+      host: process.env.MYSQL_HOST,
+      port: process.env.MYSQL_PORT,
+      user: process.env.MYSQL_USER,
+      password: process.env.MYSQL_PASSWORD,
+      database: process.env.MYSQL_DATABASE,
     },
     pool: {
       // 连接池的配置
@@ -64,12 +66,12 @@ module.exports = appInfo => {
     },
   };
   config.sequelize = {
+    host: process.env.MYSQL_HOST,
+    port: process.env.MYSQL_PORT,
+    user: process.env.MYSQL_USER,
+    password: process.env.MYSQL_PASSWORD,
+    database: process.env.MYSQL_DATABASE,
     dialect: 'mysql',
-    host: '47.108.224.146',
-    port: 3306,
-    username: 'root2',
-    password: '123456',
-    database: 'notebook2',
     timezone: '+08:00',
     define: {
       timestamps: false,
@@ -85,7 +87,7 @@ module.exports = appInfo => {
   }
   config.jwt = {
     enable: true,
-    secret: '5cb3e0edc9cb075e2be5a6c3305e2cfe1d379909ce494bec444445115f80fa92',
+    secret: process.env.JWT_SECRET,
     ignore: ["/test", '/login', '/api/v1', '/xcxm'],
     expiresIn: '2h'
   };
@@ -108,12 +110,21 @@ module.exports = appInfo => {
       }
     }
   }
+  console.log("appInfo.baseDir", appInfo.baseDir);
+  config.static = {
+    prefix: '/static/', // 访问路径前缀
+    dir: path.join(appInfo.baseDir, 'app/public') // 静态文件存放目录
+  };
   config.customLoader = {
     common: {
       directory: 'app/common', // 指定加载目录
       inject: 'app',          // 注入到app对象
       loadunit: true,         // 支持在单元测试时加载
     }
+  };
+  config.multipart = {
+    mode: 'file',
+    fileSize: '10mb'
   };
   config.env = "prod";
   return {

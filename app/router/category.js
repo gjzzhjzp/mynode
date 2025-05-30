@@ -7,5 +7,6 @@ module.exports = app => {
     router.post('/category/add', controller.category.add);
     router.post('/category/update', controller.category.update);
     router.post('/category/delete', controller.category.delete);
+
 };
 

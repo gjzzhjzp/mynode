@@ -30,11 +30,11 @@ class WechatService extends Service {
     ctx.logger.info("当前日期:", formattedDate);
     return formattedDate;
   }
-  async sendOverLimitNotification(openid, limitType, limitAmount, allAmount) {
+  async sendOverLimitNotification(openid, limitType, limitAmount, allAmount, currency = "￥") {
     const { ctx } = this;
     const { xcx } = this.config.thirdApi;
 
-    const thing4 = `您的预算为 ￥${limitAmount}，现已支出 ￥${allAmount}`;
+    const thing4 = `您的预算为 ${currency}${limitAmount}，现已支出  ${currency}${allAmount}`;
     ctx.logger.info("sendOverLimitNotification----------------", openid, limitType, limitAmount, allAmount, allAmount - limitAmount, thing4);
     try {
       const accessToken = await this.getAccessToken();  // 获取 access_token
@@ -45,9 +45,9 @@ class WechatService extends Service {
         miniprogram_state: xcx.miniprogram_state,
         data: {
           thing1: { value: `${limitType === 'daily' ? '每日预算超支' : limitType === 'monthly' ? '每月预算超支' : '每年预算超支'}` },
-          amount2: { value: `￥${allAmount - limitAmount}` },
+          amount2: { value: ` ${currency}${allAmount - limitAmount}` },
           time3: { value: await this.getcurrentMoment() },
-          thing4: { value: `总支出￥${allAmount}，请及时调整您的消费计划` }
+          thing4: { value: `总支出 ${currency}${allAmount}，请及时调整` }
         }
       };
 

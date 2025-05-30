@@ -67,8 +67,8 @@ class AccountService extends Service {
       }
     });
 
-    if (todaySpent > userLimit.daily_limit) {
-      await ctx.service.wechat.sendOverLimitNotification(user_openid, 'daily', userLimit.daily_limit, todaySpent);
+    if (userLimit.daily_limit > 0 && todaySpent > userLimit.daily_limit) {
+      await ctx.service.wechat.sendOverLimitNotification(user_openid, 'daily', userLimit.daily_limit, todaySpent, userLimit.currency);
     }
 
     // 检查每月额度
@@ -86,8 +86,8 @@ class AccountService extends Service {
       }
     });
 
-    if (monthSpent > userLimit.monthly_limit) {
-      await ctx.service.wechat.sendOverLimitNotification(user_openid, 'monthly', userLimit.monthly_limit, monthSpent);
+    if (userLimit.monthly_limit > 0 && monthSpent > userLimit.monthly_limit) {
+      await ctx.service.wechat.sendOverLimitNotification(user_openid, 'monthly', userLimit.monthly_limit, monthSpent, userLimit.currency);
     }
 
     // 检查每年额度
@@ -106,8 +106,8 @@ class AccountService extends Service {
       }
     });
 
-    if (yearSpent > userLimit.yearly_limit) {
-      await ctx.service.wechat.sendOverLimitNotification(user_openid, 'yearly', userLimit.yearly_limit, yearSpent);
+    if (userLimit.yearly_limit > 0 && yearSpent > userLimit.yearly_limit) {
+      await ctx.service.wechat.sendOverLimitNotification(user_openid, 'yearly', userLimit.yearly_limit, yearSpent, userLimit.currency);
     }
   }
   async createAccount(data) {
@@ -163,9 +163,13 @@ class AccountService extends Service {
       endDate
     });
   }
-  async getStatisticsByflList({ openid, startDate, endDate, page = 1, rows = 10 }) {
+  async getStatisticsByflList({ openid, startDate, endDate, page = 1, rows = 10, category }) {
     const { ctx } = this;
-    const where = { user_openid: openid };
+    const where = {
+      user_openid: openid,
+      // 新增分类过滤条件
+      ...(category && { category })
+    };
 
     if (startDate && endDate) {
       where.date = { [ctx.app.Sequelize.Op.between]: [startDate, endDate] };
@@ -252,6 +256,23 @@ class AccountService extends Service {
     const { ctx } = this;
     const openid = ctx.state.user.openid;
     return await ctx.model.Account.deleteById(id, openid);
+  }
+  async exportYearlyBills(openid, year) {
+    const { ctx } = this;
+    const bills = await ctx.model.Account.getYearlyBills(openid, year);
+
+    // 生成 CSV 内容
+    const csvContent = [
+      '日期,类型,类别,金额,描述',
+      ...bills.map(bill =>
+        `${bill.date},${bill.type ? '收入' : '支出'},${bill.category},${bill.amount},${bill.description}`
+      )
+    ].join('\n');
+
+    return {
+      filename: `${year}_账单.csv`,
+      content: csvContent
+    };
   }
 }
 
