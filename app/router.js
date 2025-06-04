@@ -12,5 +12,7 @@ module.exports = app => {
   require('./router/entertainment')(app);
   require('./router/category')(app);
   require('./router/notices')(app);
+  require('./router/menstrualDailyRecords')(app);
+  require('./router/menstrualSetting')(app);
 };
 
