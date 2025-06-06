@@ -5,5 +5,6 @@ module.exports = app => {
     const { router, controller } = app;
     router.post('/menstrual/add', controller.menstrualDailyRecords.add)
     router.get('/menstrual/getByDate', controller.menstrualDailyRecords.getByDate)
+    router.get('/menstrual/getMonthlyRecords', controller.menstrualDailyRecords.getMonthlyRecords);
 };
 

@@ -14,5 +14,6 @@ module.exports = app => {
   require('./router/notices')(app);
   require('./router/menstrualDailyRecords')(app);
   require('./router/menstrualSetting')(app);
+  require('./router/menstrualPeriod')(app);
 };
 

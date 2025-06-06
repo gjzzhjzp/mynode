@@ -1,7 +1,7 @@
 module.exports = app => {
   const { STRING, INTEGER, BOOLEAN } = app.Sequelize;
 
-  const MenstrualSetting = app.model.define('menstrual_settings', {
+  const MenstrualSetting = app.model.define('menstrual_setting', {
     id: { type: INTEGER, primaryKey: true, autoIncrement: true },
     user_openid: {
       type: STRING(64),
@@ -37,7 +37,7 @@ module.exports = app => {
     timestamps: true,
     createdAt: 'created_at',
     updatedAt: 'updated_at',
-    tableName: 'menstrual_settings',
+    tableName: 'menstrual_setting',
     comment: '用户经期设置表'
   });
   MenstrualSetting.upsert = async function (values, options) {

@@ -62,7 +62,7 @@ module.exports = app => {
                 record_date: queryDate
             }
         });
-        console.log("-------------------",record);
+        // console.log("-------------------",values,options);
         if (record) { // 更新
             const updated = await record.update(values, options);
             return [updated, false];

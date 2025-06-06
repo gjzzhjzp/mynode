@@ -8,7 +8,6 @@ class MenstrualDailyRecordsController extends Controller {
                 ...ctx.request.body,
                 openid: ctx.state.user.openid
             };
-            
             // 调用Service层
             const result = await ctx.service.menstrualDailyRecords.upsert(params);
             
@@ -38,6 +37,23 @@ class MenstrualDailyRecordsController extends Controller {
             
         } catch (error) {
             ctx.body = ctx.app.common.response.error(500, '查询每日记录失败: ' + error.message);
+        }
+    }
+    async getMonthlyRecords() {
+        const { ctx } = this;
+        try {
+            const { year, month } = ctx.query;
+            const openid = ctx.state.user.openid;
+            
+            const periodDates = await ctx.service.menstrualDailyRecords.getMonthlyPeriodRecords({
+                openid,
+                year: parseInt(year),
+                month: parseInt(month)
+            });
+            
+            ctx.body = ctx.app.common.response.success(periodDates);
+        } catch (error) {
+            ctx.body = ctx.app.common.response.error(500, '获取月度记录失败: ' + error.message);
         }
     }
 }

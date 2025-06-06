@@ -1,7 +1,7 @@
 const Controller = require('egg').Controller;
 
 class MenstrualSettingController extends Controller {
-    async upsert() {
+    async add() {
         const { ctx } = this;
         try {
             const params = {
@@ -16,6 +16,26 @@ class MenstrualSettingController extends Controller {
             
         } catch (error) {
             ctx.body = ctx.app.common.response.error(500, '操作设置失败: ' + error.message);
+        }
+    }
+    
+    async get() {
+        const { ctx } = this;
+        try {
+            const openid = ctx.state.user.openid;
+            
+            // 调用Service层查询设置
+            const setting = await ctx.service.menstrualSetting.getByOpenid(openid);
+            
+            if (!setting) {
+                ctx.body = ctx.app.common.response.error(404, '未找到用户设置');
+                return;
+            }
+
+            ctx.body = ctx.app.common.response.success(setting);
+            
+        } catch (error) {
+            ctx.body = ctx.app.common.response.error(500, '查询设置失败: ' + error.message);
         }
     }
 }

@@ -24,6 +24,13 @@ class MenstrualSettingService extends Service {
             isNewRecord: created
         };
     }
+    async getByOpenid(openid) {
+        const { ctx } = this;
+        return await ctx.model.MenstrualSetting.findOne({
+            where: { user_openid: openid },
+            raw: true
+        });
+    }
 }
 
 module.exports = MenstrualSettingService;
